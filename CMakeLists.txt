@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-set(CMAKE_TOOLCHAIN_FILE "D:\\workspace\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake" CACHE STRING "")
+
 project(ObjRendererLib LANGUAGES CXX)
 
 find_package(OpenGL REQUIRED)
