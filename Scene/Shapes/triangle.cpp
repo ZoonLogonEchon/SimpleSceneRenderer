@@ -32,7 +32,8 @@ Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 }
 
 
-Triangle::Triangle(const std::vector<std::vector<float>>& vertices)
+Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>& vertices)
+	:name(name)
 {
 	for (const auto vertex : vertices)
 	{

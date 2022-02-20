@@ -7,25 +7,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Sphere::Sphere()
+Sphere::Sphere(const std::string name)
+	:name(name)
 {
 	unsigned i = 0;
-	std::pair<std::vector<float>, unsigned> a = { {0.0, 0.5, 0.0}, i++ };
-	std::pair<std::vector<float>, unsigned> b = { {0.0, -0.5, 0.0}, i++ };
-	std::pair<std::vector<float>, unsigned> c = { {0.5, 0.0, 0.0}, i++ };
-	std::pair<std::vector<float>, unsigned> d = { {-0.5, 0.0, 0.0}, i++ };
-	std::pair<std::vector<float>, unsigned> e = { {0.0, 0.0, 0.5}, i++ };
-	std::pair<std::vector<float>, unsigned> f = { {0.0, 0.0, -0.5}, i++ };
+	std::pair<std::vector<float>, unsigned> a = { {0.0, 0.5, 1.0}, i++ };
+	std::pair<std::vector<float>, unsigned> b = { {0.0, -0.5, 1.0}, i++ };
+	std::pair<std::vector<float>, unsigned> c = { {0.5, 0.0, 1.0}, i++ };
+	std::pair<std::vector<float>, unsigned> d = { {-0.5, 0.0, 1.0}, i++ };
+	std::pair<std::vector<float>, unsigned> e = { {0.0, 0.0, 1.5}, i++ };
+	std::pair<std::vector<float>, unsigned> f = { {0.0, 0.0, 0.5}, i++ };
 
 
-	Triangle tade({ a.first, d.first, e.first });
-	Triangle tace({ a.first, c.first, e.first });
-	Triangle tacf({ a.first, c.first, f.first });
-	Triangle tadf({ a.first, d.first, f.first });
-	Triangle tbde({ b.first, d.first, e.first });
-	Triangle tbce({ b.first, c.first, e.first });
-	Triangle tbcf({ b.first, c.first, f.first });
-	Triangle tbdf({ b.first, d.first, f.first });
+	Triangle tade("",{ a.first, d.first, e.first });
+	Triangle tace("", { a.first, c.first, e.first });
+	Triangle tacf("", { a.first, c.first, f.first });
+	Triangle tadf("", { a.first, d.first, f.first });
+	Triangle tbde("", { b.first, d.first, e.first });
+	Triangle tbce("", { b.first, c.first, e.first });
+	Triangle tbcf("", { b.first, c.first, f.first });
+	Triangle tbdf("", { b.first, d.first, f.first });
 
 	triangles.push_back(tade);
 	triangles.push_back(tace);

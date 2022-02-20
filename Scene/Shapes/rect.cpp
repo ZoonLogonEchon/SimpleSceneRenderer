@@ -12,14 +12,14 @@ Rect::Rect(const std::string name)
 	:name(name)
 {
 	unsigned i = 0;
-	std::vector<float> a = {-0.5, 0.5, 0.0};
-	std::vector<float> b =  {0.5, 0.5, 0.0};
-	std::vector<float> c = {-0.5, -0.5, 0.0};
-	std::vector<float> d =  {0.5, -0.5, 0.0};
+	std::vector<float> a = {-0.5f, 0.5f, 1.0f};
+	std::vector<float> b =  {0.5f, 0.5f, 1.0f};
+	std::vector<float> c = {-0.5f, -0.5f, 1.0f};
+	std::vector<float> d =  {0.5f, -0.5f, 1.0f};
 
 
-	Triangle tabc({ a, b, c });
-	Triangle tbcd({ b, c, d });
+	Triangle tabc("", { a, b, c });
+	Triangle tbcd("", { b, c, d });
 
 	triangles.push_back(tabc);
 	triangles.push_back(tbcd);

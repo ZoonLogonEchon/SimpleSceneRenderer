@@ -16,11 +16,12 @@ public:
 	Scene(const std::string name);
 	~Scene();
 
+	void addRect(const std::string name);
+	void addSphere(const std::string name);
 	void addTriangle(const std::string name);
 
-	void addRect(const std::string name);
-
-	std::unordered_map<std::string, Rect>& getAllRects();
+	std::unordered_map<std::string, Rect>& getRects();
+	std::unordered_map<std::string, Sphere>& getSpheres();
 	std::unordered_map<std::string, Triangle>& getTriangles();
 
 	Camera &getMainCamera();

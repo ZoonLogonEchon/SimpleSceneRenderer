@@ -10,7 +10,7 @@
 class Sphere
 {
 public:
-	Sphere();
+	Sphere(const std::string name);
 	~Sphere();
 
 	void draw();
@@ -18,5 +18,6 @@ public:
 	unsigned int getPrimitivesCount();
 private:
 	std::vector<Triangle> triangles;
+	std::string name;
 	
 };

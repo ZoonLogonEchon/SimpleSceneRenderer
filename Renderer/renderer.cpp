@@ -47,6 +47,10 @@ void Renderer::init(Scene &scene)
 
 	for (auto mapitem_triangle : scene.getTriangles())
 		mapitem_triangle.second.bufferData(m_prog, "aPos");
+	for (auto mapitem_rect : scene.getRects())
+		mapitem_rect.second.bufferData(m_prog, "aPos");
+	for (auto mapitem_sphere : scene.getSpheres())
+		mapitem_sphere.second.bufferData(m_prog, "aPos");
 
 	glFinish();
 }
@@ -67,12 +71,16 @@ void Renderer::render(Scene& scene)
 
 	m_prog.use();
 	// TODO maybe there's a more efficient way to do it (avoid uploading uniform if there's no change)
+	// -> uniform buffer objects
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
-	m_prog.setUniformMatrix4("model_transform", glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 30.0f, 1.0f)));
-	for (auto mapitem_triangle : scene.getTriangles())
-		mapitem_triangle.second.draw();
-
+	m_prog.setUniformMatrix4("model_transform", glm::scale(glm::mat4(1.0f), glm::vec3(30.0f, 30.0f, 1.0f)));
+	//for (auto mapitem_triangle : scene.getTriangles())
+	//	mapitem_triangle.second.draw();
+	//for (auto mapitem_rect : scene.getRects())
+	//	mapitem_rect.second.draw();
+	for (auto mapitem_sphere : scene.getSpheres())
+		mapitem_sphere.second.draw();
 	glDisable(GL_BLEND);
 	glFinish();
 }

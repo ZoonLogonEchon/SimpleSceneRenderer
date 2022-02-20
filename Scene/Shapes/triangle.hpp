@@ -15,7 +15,7 @@ class Triangle
 public:
 	Triangle(const std::string name);
 	Triangle(const std::string name, const std::vector<float> &vertices);
-	Triangle(const std::vector<std::vector<float>>& vertices);
+	Triangle(const std::string name, const std::vector<std::vector<float>>& vertices);
 
 	~Triangle();
 

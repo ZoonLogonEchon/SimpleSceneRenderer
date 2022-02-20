@@ -60,7 +60,9 @@ int main(int argc, char* argv[])
 
 	// build Scene 
 	Scene sc("my scene");
-	sc.addTriangle("testrect");
+	sc.addTriangle("test_triangle");
+	sc.addRect("test_rect");
+	sc.addSphere("test_sphere");
 	Renderer ren;
 	ren.init(sc);
 

@@ -19,9 +19,19 @@ void Scene::addRect(const std::string name)
 	rects.insert({name, Rect(name)});
 }
 
-std::unordered_map<std::string, Rect>& Scene::getAllRects()
+void Scene::addSphere(const std::string name)
+{
+	spheres.insert({ name, Sphere(name) });
+}
+
+std::unordered_map<std::string, Rect>& Scene::getRects()
 {
 	return rects;
+}
+
+std::unordered_map<std::string, Sphere>& Scene::getSpheres()
+{
+	return spheres;
 }
 
 std::unordered_map<std::string, Triangle>& Scene::getTriangles()
