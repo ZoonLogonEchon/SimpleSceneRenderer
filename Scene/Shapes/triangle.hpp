@@ -1,10 +1,13 @@
 #pragma once
 
-#include <glad/glad.h>
+
 #include <vector>
 #include <string>
 
-#include <SceneRenderer/Utility/OGLProgram.hpp>
+#include "../../glad/glad.h"
+#include <glm/glm.hpp>
+
+#include "../../Renderer/OGLProgram.hpp"
 
 
 class Triangle

@@ -1,4 +1,4 @@
-#include <SceneRenderer/Shapes/rect.hpp>
+#include "rect.hpp"
 
 #include <iostream>
 #include <vector>
@@ -8,7 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Rect::Rect()
+Rect::Rect(const std::string name)
+	:name(name)
 {
 	unsigned i = 0;
 	std::vector<float> a = {-0.5, 0.5, 0.0};

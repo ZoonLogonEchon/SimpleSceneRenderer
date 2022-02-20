@@ -5,32 +5,33 @@
 #include <chrono>
 
 
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include <SceneRenderer/renderer.hpp>
-
+#include "Renderer/renderer.hpp"
+#include "Scene/scene.hpp"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
 
 Renderer* renderer;
+Scene* scene;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(0.0f, 2.0f, 0.0f));
+		scene->getMainCamera().translate(glm::vec3(0.0f, 2.0f, 0.0f));
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(0.0f, -2.0f, 0.0f));
+		scene->getMainCamera().translate(glm::vec3(0.0f, -2.0f, 0.0f));
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(2.0f, 0.0f, 0.0f));
+		scene->getMainCamera().translate(glm::vec3(2.0f, 0.0f, 0.0f));
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(-2.0f, 0.0f, 0.0f));
+		scene->getMainCamera().translate(glm::vec3(-2.0f, 0.0f, 0.0f));
 	if (key == GLFW_KEY_W && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(0.0f, 0.0f, 2.0f));
+		scene->getMainCamera().translate(glm::vec3(0.0f, 0.0f, 2.0f));
 	if (key == GLFW_KEY_S && action == GLFW_PRESS)
-		renderer->updateCameraPos(glm::vec3(0.0f, 0.0f, -2.0f));
+		scene->getMainCamera().translate(glm::vec3(0.0f, 0.0f, -2.0f));
 }
 int main(int argc, char* argv[])
 {
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
 	// glfw window setup
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "SPH Simulation", NULL, NULL);
@@ -56,10 +57,15 @@ int main(int argc, char* argv[])
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+
+	// build Scene 
+	Scene sc("my scene");
+	sc.addRect("testrect");
 	Renderer ren;
-	ren.init();
+	ren.init(sc);
 
 	renderer = &ren;
+	scene = &sc;
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
@@ -78,7 +84,7 @@ int main(int argc, char* argv[])
 		auto start = std::chrono::system_clock::now();
 		if (frame_time >= d_t)
 		{
-			ren.render();
+			ren.render(sc);
 			frame_time = 0.0f;
 			glfwSwapBuffers(window);
 			glfwPollEvents();

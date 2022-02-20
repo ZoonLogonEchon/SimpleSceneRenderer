@@ -1,18 +1,18 @@
 #pragma once
 
-#include <glad/glad.h>
+#include "../../glad/glad.h"
 #include <vector>
 #include <string>
 
 #include "triangle.hpp"
 
 
-#include <SceneRenderer/Utility/OGLProgram.hpp>
+#include "../../Renderer/OGLProgram.hpp"
 
 class Rect
 {
 public:
-	Rect();
+	Rect(const std::string name);
 	~Rect();
 
 	void draw();
@@ -20,5 +20,6 @@ public:
 
 	
 private:
+	std::string name;
 	std::vector<Triangle> triangles;
 };

@@ -1,4 +1,4 @@
-#include <SceneRenderer/Shapes/triangle.hpp>
+#include "triangle.hpp"
 
 #include <iostream>
 #include <vector>
@@ -9,9 +9,9 @@
 
 
 Triangle::Triangle() : Triangle(std::vector<float>({
-	 0.5f,  0.5f, 0.0f,  // top right
-	 0.5f, -0.5f, 0.0f,  // bottom right
-	-0.5f,  0.5f, 0.0f   // top left 
+	 0.0f,  0.0f, 1.0f,  // center
+	 0.0f, 1.0f, 1.0f,  // top
+	 1.0f,  0.0f, 1.0f   // right
 	}))
 {
 

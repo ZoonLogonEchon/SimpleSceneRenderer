@@ -1,5 +1,5 @@
 #pragma once
-#include <glad/glad.h>
+#include "../glad/glad.h"
 #include <string>
 #include <vector>
 
@@ -19,7 +19,6 @@ public:
 	void use();
 
 	void release();
-
 
 	void configureVertexAttrPtr(const char* attr_name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
 	void enableVertexAttrArray(const char* attr_name);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <glad/glad.h>
+#include "../../glad/glad.h"
 #include <vector>
 
-#include <SceneRenderer/Utility/OGLProgram.hpp>
+#include "../../Renderer/OGLProgram.hpp"
 
 #include "triangle.hpp"
 

@@ -1,4 +1,4 @@
-#include <SceneRenderer/Shapes/sphere.hpp>
+#include "sphere.hpp"
 #include <iostream>
 #include <vector>
 #include <random>

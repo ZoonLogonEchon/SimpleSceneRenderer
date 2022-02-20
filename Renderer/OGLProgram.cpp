@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "SceneRenderer/Utility/OGLProgram.hpp"
+#include "OGLProgram.hpp"
 
 OGLProgram::OGLProgram()
 	:m_program_handle(glCreateProgram())
@@ -35,6 +35,10 @@ void OGLProgram::link()
 	if (!success) {
 		glGetProgramInfoLog(m_program_handle, 512, NULL, infoLog);
 		std::cout << "ERROR::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+	else
+	{
+		std::cout << "Program linked successfully" << std::endl;
 	}
 }
 
@@ -89,5 +93,9 @@ void OGLProgram::compileShader(const GLuint& shader_handle)
 	{
 		glGetShaderInfoLog(shader_handle, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+	} 
+	else
+	{
+		std::cout << "Shader compiled successfully" << std::endl;
 	}
 }
