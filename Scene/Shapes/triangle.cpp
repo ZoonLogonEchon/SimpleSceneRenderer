@@ -8,16 +8,18 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Triangle::Triangle() : Triangle(std::vector<float>({
+Triangle::Triangle(const std::string name) 
+	: Triangle(name, std::vector<float>({
 	 0.0f,  0.0f, 1.0f,  // center
 	 0.0f, 1.0f, 1.0f,  // top
 	 1.0f,  0.0f, 1.0f   // right
 	}))
 {
-
+	
 }
 
-Triangle::Triangle(const std::vector<float>& vertices)
+Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
+	:name(name)
 {
 	for (const auto comp : vertices)
 	{

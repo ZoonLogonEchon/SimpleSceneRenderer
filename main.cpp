@@ -21,17 +21,17 @@ Scene* scene;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(0.0f, 2.0f, 0.0f));
+		scene->getMainCamera().moveViewDir(1.0f);
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(0.0f, -2.0f, 0.0f));
+		scene->getMainCamera().moveViewDir(-1.0f);
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(2.0f, 0.0f, 0.0f));
+		scene->getMainCamera().moveHorizontal(1.0f);
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(-2.0f, 0.0f, 0.0f));
+		scene->getMainCamera().moveHorizontal(-1.0f);
 	if (key == GLFW_KEY_W && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(0.0f, 0.0f, 2.0f));
+		scene->getMainCamera().moveVertical(1.0f);
 	if (key == GLFW_KEY_S && action == GLFW_PRESS)
-		scene->getMainCamera().translate(glm::vec3(0.0f, 0.0f, -2.0f));
+		scene->getMainCamera().moveVertical(-1.0f);
 }
 int main(int argc, char* argv[])
 {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
 
 	// build Scene 
 	Scene sc("my scene");
-	sc.addRect("testrect");
+	sc.addTriangle("testrect");
 	Renderer ren;
 	ren.init(sc);
 

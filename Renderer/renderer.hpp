@@ -24,15 +24,7 @@ public:
 	void render(Scene &scene);
 
 private:
-	GLuint m_vbo;
-	GLuint m_ebo;
-	GLuint m_vao;
 
-	GLuint m_vao_dom_bounds;
-	GLuint m_vbo_dom_bounds;
-	GLuint m_ebo_dom_bounds;
-
-	Triangle tr;
 	OGLProgram m_prog;
 
 	void checkGLErrors();

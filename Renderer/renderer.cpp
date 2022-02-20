@@ -44,7 +44,10 @@ void Renderer::init(Scene &scene)
 	m_prog.compileAndAttachShader(vSSrc.c_str(), GL_VERTEX_SHADER);
 	m_prog.compileAndAttachShader(fSSrc.c_str(), GL_FRAGMENT_SHADER);
 	m_prog.link();
-	tr.bufferData(m_prog, "aPos");
+
+	for (auto mapitem_triangle : scene.getTriangles())
+		mapitem_triangle.second.bufferData(m_prog, "aPos");
+
 	glFinish();
 }
 
@@ -56,16 +59,20 @@ void Renderer::render(Scene& scene)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	const float aspect = 800.0 / 600.0;
+	const float width = 800.0f;
+	const float height = 600.0f;
 	Camera &mainCamera = scene.getMainCamera();
-	glm::mat4 proj = mainCamera.getProjectionTransform(aspect);
+	glm::mat4 proj = mainCamera.getProjectionTransform(width, height);
 	glm::mat4 view_transform = mainCamera.getViewTransform();
 
 	m_prog.use();
+	// TODO maybe there's a more efficient way to do it (avoid uploading uniform if there's no change)
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
-	m_prog.setUniformMatrix4("model_transform", glm::mat4(1.0f));
-	tr.draw();
+	m_prog.setUniformMatrix4("model_transform", glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 30.0f, 1.0f)));
+	for (auto mapitem_triangle : scene.getTriangles())
+		mapitem_triangle.second.draw();
+
 	glDisable(GL_BLEND);
 	glFinish();
 }
