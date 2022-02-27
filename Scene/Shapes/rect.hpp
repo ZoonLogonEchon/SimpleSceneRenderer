@@ -18,8 +18,10 @@ public:
 	void draw();
 	void bufferData(OGLProgram &prog, const std::string attrName);
 
-	
-private:
 	std::string name;
 	std::vector<Triangle> triangles;
+	// rgb
+	glm::vec3 color;
+private:
+	
 };

@@ -16,8 +16,11 @@ public:
 	void draw();
 	void bufferData(OGLProgram& prog, const std::string attrName);
 	unsigned int getPrimitivesCount();
-private:
 	std::vector<Triangle> triangles;
 	std::string name;
+	// rgb
+	glm::vec3 color;
+private:
+	
 	
 };

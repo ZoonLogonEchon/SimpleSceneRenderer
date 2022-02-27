@@ -22,9 +22,12 @@ namespace ShaderSources {
 		"#version 460 core\n"
 		"out vec4 FragColor;\n"
 		"uniform vec4 vertex_color;\n"
+		"uniform vec3 u_normal;\n"
+		"uniform vec3 u_obj_color;\n"
 		"void main()\n"
 		"{\n"
-		"	FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+		"	vec3 light_color = vec3(1.0, 1.0, 1.0); \n"
+		"	FragColor = vec4(u_obj_color, 1.0);\n"
 		"}\0";
 		return src;
 	}

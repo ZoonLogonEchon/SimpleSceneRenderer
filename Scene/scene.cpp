@@ -14,9 +14,24 @@ void Scene::addTriangle(const std::string name)
 	triangles.insert({ name, Triangle(name) });
 }
 
+void Scene::translateTriangle(const std::string name, const glm::vec3 vec)
+{
+	triangles.at(name).translate(vec);
+}
+
+void Scene::scaleTriangle(const std::string name, const glm::vec3 vec)
+{
+	triangles.at(name).scale(vec);
+}
+
+void Scene::scaleTriangle(const std::string name, const float factor)
+{
+	triangles.at(name).scale(glm::vec3(factor));
+}
+
 void Scene::addRect(const std::string name)
 {
-	rects.insert({name, Rect(name)});
+	rects.insert({ name, Rect(name) });
 }
 
 void Scene::addSphere(const std::string name)

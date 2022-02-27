@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
+// todo redesign the overloaded constructors
 Triangle::Triangle(const std::string name) 
 	: Triangle(name, std::vector<float>({
 	 0.0f,  0.0f, 1.0f,  // center
@@ -15,11 +15,14 @@ Triangle::Triangle(const std::string name)
 	 1.0f,  0.0f, 1.0f   // right
 	}))
 {
-	
+	color = glm::vec3(0.0f, 1.0f, 1.0f);
+	position = glm::vec3(0.0f);
 }
 
 Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 	:name(name)
+	,color(glm::vec3(0.0f, 1.0f, 1.0f))
+	,position(glm::vec3(0.0f))
 {
 	for (const auto comp : vertices)
 	{
@@ -34,6 +37,8 @@ Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 
 Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>& vertices)
 	:name(name)
+	,color(glm::vec3(0.0f, 1.0f, 1.0f))
+	,position(glm::vec3(0.0f))
 {
 	for (const auto vertex : vertices)
 	{
@@ -51,9 +56,9 @@ Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>
 
 void Triangle::genBuffers()
 {
-	glGenBuffers(1, &m_vbo);
-	glGenBuffers(1, &m_ebo);
-	glGenVertexArrays(1, &m_vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
+	glGenVertexArrays(1, &vao);
 }
 
 Triangle::~Triangle()
@@ -64,19 +69,31 @@ Triangle::~Triangle()
 
 void Triangle::bufferData(OGLProgram& prog, const std::string attrName)
 {
-	glBindVertexArray(m_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * face_indeces.size(), face_indeces.data(), GL_STATIC_DRAW);
 	prog.configureVertexAttrPtr(attrName.c_str(), 3, gl_type<float>::value, GL_FALSE, 0, (void*)0);
 	prog.enableVertexAttrArray(attrName.c_str());
 	glBindVertexArray(0);
 }
 
+void Triangle::translate(const glm::vec3 vec)
+{
+	position += vec;
+}
+
+void Triangle::scale(const glm::vec3 vec)
+{
+	size[0] *= vec[0];
+	size[1] *= vec[1];
+	size[2] *= vec[2];
+}
+
 void Triangle::draw()
 {
-	glBindVertexArray(m_vao);
+	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, face_indeces.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
