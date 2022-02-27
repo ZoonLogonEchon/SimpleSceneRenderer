@@ -25,6 +25,7 @@ public:
 	void moveViewDir(const float movement_speed);
 	void moveHorizontal(const float movement_speed);
 	void moveVertical(const float movement_speed);
+	void lookAroundHorizontal(const float yaw);
 private:
 	glm::vec3 eye;
 	glm::vec3 gazePoint;

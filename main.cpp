@@ -32,6 +32,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		scene->getMainCamera().moveVertical(1.0f);
 	if (key == GLFW_KEY_S && action == GLFW_PRESS)
 		scene->getMainCamera().moveVertical(-1.0f);
+	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+		scene->getMainCamera().lookAroundHorizontal(1.0f);
+	if (key == GLFW_KEY_E && action == GLFW_PRESS)
+		scene->getMainCamera().lookAroundHorizontal(-1.0f);
 }
 int main(int argc, char* argv[])
 {
@@ -64,7 +68,7 @@ int main(int argc, char* argv[])
 	sc.addTriangle(tr_name);
 	sc.scaleTriangle(tr_name, glm::vec3(30.0f, 30.0f, 1.0f));
 	sc.rotateTriangle(tr_name, glm::vec3(0.0f, 0.0f, glm::radians(45.0f)));
-	sc.translateTriangle(tr_name, glm::vec3(30.0f, 0.0f, 0.0f));
+	//sc.translateTriangle(tr_name, glm::vec3(30.0f, 0.0f, 0.0f));
 	Renderer ren;
 	ren.init(sc);
 
