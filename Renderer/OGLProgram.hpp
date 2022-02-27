@@ -24,6 +24,7 @@ public:
 	void enableVertexAttrArray(const char* attr_name);
 
 	void setUniformMatrix4(const char* uniform_name, const glm::mat4 &mat);
+	void setUniformVector3(const char* uniform_name, const glm::vec3& vec);
 	void setUniformVector4(const char* uniform_name, const glm::vec4 &vec);
 
 	//void setBool(const std::string& name, bool value);
