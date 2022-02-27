@@ -81,8 +81,7 @@ void Renderer::render(Scene& scene)
 		glm::mat4 model_transform = glm::mat4(1.0f);
 		model_transform = glm::translate(model_transform, mapitem_triangle.second.position);
 		model_transform = glm::scale(model_transform, mapitem_triangle.second.size);
-		
-		
+		model_transform = model_transform * mapitem_triangle.second.getRotationMatrix();
 		m_prog.setUniformMatrix4("model_transform", model_transform);
 		draw(mapitem_triangle.second);
 	}

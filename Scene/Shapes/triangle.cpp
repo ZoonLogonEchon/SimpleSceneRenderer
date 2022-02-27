@@ -15,14 +15,16 @@ Triangle::Triangle(const std::string name)
 	 1.0f,  0.0f, 1.0f   // right
 	}))
 {
-	color = glm::vec3(0.0f, 1.0f, 1.0f);
-	position = glm::vec3(0.0f);
+	
 }
+
 
 Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 	:name(name)
 	,color(glm::vec3(0.0f, 1.0f, 1.0f))
 	,position(glm::vec3(0.0f))
+	,size(1.0f)
+	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
 {
 	for (const auto comp : vertices)
 	{
@@ -39,6 +41,8 @@ Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>
 	:name(name)
 	,color(glm::vec3(0.0f, 1.0f, 1.0f))
 	,position(glm::vec3(0.0f))
+	,size(1.0f)
+	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
 {
 	for (const auto vertex : vertices)
 	{
@@ -46,7 +50,6 @@ Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>
 		{
 			this->vertices.push_back(comp);
 		}
-		
 	}
 	face_indeces = {  // note that we start from 0!
 	0, 1, 2  // first triangle
@@ -89,6 +92,16 @@ void Triangle::scale(const glm::vec3 vec)
 	size[0] *= vec[0];
 	size[1] *= vec[1];
 	size[2] *= vec[2];
+}
+
+void Triangle::rotate(const glm::quat q)
+{
+	orientation *= q;
+}
+
+glm::mat4 Triangle::getRotationMatrix()
+{
+	return glm::toMat4(orientation);
 }
 
 void Triangle::draw()

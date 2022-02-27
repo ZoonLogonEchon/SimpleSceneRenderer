@@ -29,6 +29,16 @@ void Scene::scaleTriangle(const std::string name, const float factor)
 	triangles.at(name).scale(glm::vec3(factor));
 }
 
+void Scene::rotateTriangle(const std::string name, const glm::vec3 angles)
+{
+	triangles.at(name).rotate(glm::quat(angles));
+}
+
+void Scene::rotateTriangle(const std::string name, const glm::quat q)
+{
+	triangles.at(name).rotate(q);
+}
+
 void Scene::addRect(const std::string name)
 {
 	rects.insert({ name, Rect(name) });

@@ -7,6 +7,7 @@
 #include "../../glad/glad.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "../../Renderer/OGLProgram.hpp"
 
 
@@ -24,6 +25,10 @@ public:
 
 	void translate(const glm::vec3 vec);
 	void scale(const glm::vec3 vec);
+	void rotate(const glm::quat q);
+
+	// for convenience
+	glm::mat4 getRotationMatrix();
 
 	std::string name;
 	GLuint vbo;
@@ -36,7 +41,7 @@ public:
 	// of vertex at the right angle
 	glm::vec3 position;
 	glm::vec3 size;
-	glm::quat rotation;
+	glm::quat orientation;
 private:
 	void genBuffers();
 };
