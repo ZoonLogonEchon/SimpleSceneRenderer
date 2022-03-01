@@ -44,6 +44,31 @@ void Scene::addRect(const std::string name)
 	rects.insert({ name, Rect(name) });
 }
 
+void Scene::translateRect(const std::string name, const glm::vec3 vec)
+{
+	rects.at(name).translate(vec);
+}
+
+void Scene::scaleRect(const std::string name, const glm::vec3 vec)
+{
+	rects.at(name).scale(vec);
+}
+
+void Scene::scaleRect(const std::string name, const float factor)
+{
+	rects.at(name).scale(glm::vec3(factor));
+}
+
+void Scene::rotateRect(const std::string name, const glm::vec3 angles)
+{
+	rects.at(name).rotate(glm::quat(angles));
+}
+
+void Scene::rotateRect(const std::string name, const glm::quat q)
+{
+	rects.at(name).rotate(q);
+}
+
 void Scene::addSphere(const std::string name)
 {
 	spheres.insert({ name, Sphere(name) });

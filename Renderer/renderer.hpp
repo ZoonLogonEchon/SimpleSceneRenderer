@@ -27,13 +27,5 @@ private:
 
 	OGLProgram m_prog;
 
-	void bufferData(Triangle& triangle, OGLProgram& prog);
-	void bufferData(Rect& rect, OGLProgram& prog);
-	void bufferData(Sphere& sphere, OGLProgram& prog);
-
-	void draw(Triangle &triangle);
-	void draw(Rect &rect);
-	void draw(Sphere &sphere);
-
 	void checkGLErrors();
 };

@@ -4,16 +4,17 @@
 #include <vector>
 #include <string>
 
-#include "triangle.hpp"
+#include "rect.hpp"
 
 
 #include "../../Renderer/OGLProgram.hpp"
 
-class Rect
+// cube built from rects (triangles would also be a possible implementation)
+class Cube
 {
 public:
-	Rect(const std::string name);
-	~Rect();
+	Cube(const std::string name);
+	~Cube();
 
 	void draw(OGLProgram& prog);
 	void bufferData(OGLProgram &prog, const std::string attrName);
@@ -23,7 +24,8 @@ public:
 	void rotate(const glm::quat q);
 
 	std::string name;
-	std::vector<Triangle> triangles;
+	// although it's possi
+	std::vector<Rect> rects;
 	// rgb
 	glm::vec3 color;
 private:

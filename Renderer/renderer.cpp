@@ -46,11 +46,9 @@ void Renderer::init(Scene &scene)
 	m_prog.link();
 
 	for (auto mapitem_triangle : scene.getTriangles())
-		bufferData(mapitem_triangle.second, m_prog);
+		mapitem_triangle.second.bufferData(m_prog, "aPos");
 	for (auto mapitem_rect : scene.getRects())
-		bufferData(mapitem_rect.second, m_prog);
-	for (auto mapitem_sphere : scene.getSpheres())
-		bufferData(mapitem_sphere.second, m_prog);
+		mapitem_rect.second.bufferData(m_prog, "aPos");
 
 	glFinish();
 }
@@ -74,70 +72,17 @@ void Renderer::render(Scene& scene)
 	// -> uniform buffer objects
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
-	
+	m_prog.setUniformVector3("u_camera_pos", scene.getMainCamera().eye);
 	for (auto &mapitem_triangle : scene.getTriangles())
 	{
-		m_prog.setUniformVector3("u_obj_color", mapitem_triangle.second.color);
-		glm::mat4 model_transform = glm::mat4(1.0f);
-		model_transform = glm::translate(model_transform, mapitem_triangle.second.position);
-		model_transform = glm::scale(model_transform, mapitem_triangle.second.size);
-		model_transform = model_transform * mapitem_triangle.second.getRotationMatrix();
-		m_prog.setUniformMatrix4("model_transform", model_transform);
-		draw(mapitem_triangle.second);
+		mapitem_triangle.second.draw(m_prog);
+	}
+	for (auto& mapitem_rect : scene.getRects())
+	{
+		mapitem_rect.second.draw(m_prog);
 	}
 	glDisable(GL_BLEND);
 	glFinish();
-}
-
-void Renderer::bufferData(Triangle& triangle, OGLProgram &prog)
-{
-	glBindVertexArray(triangle.vao);
-	glBindBuffer(GL_ARRAY_BUFFER, triangle.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * triangle.vertices.size(), triangle.vertices.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangle.ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * triangle.face_indeces.size(), triangle.face_indeces.data(), GL_STATIC_DRAW);
-	prog.configureVertexAttrPtr("aPos", 3, gl_type<float>::value, GL_FALSE, 0, (void*)0);
-	prog.enableVertexAttrArray("aPos");
-	glBindVertexArray(0);
-}
-
-void Renderer::bufferData(Rect& rect, OGLProgram& prog)
-{
-	for (auto& triangle : rect.triangles)
-	{
-		bufferData(triangle, prog);
-	}
-}
-
-void Renderer::bufferData(Sphere& sphere, OGLProgram& prog)
-{
-	for (auto& triangle : sphere.triangles)
-	{
-		bufferData(triangle, prog);
-	}
-}
-
-void Renderer::draw(Triangle& triangle)
-{
-	glBindVertexArray(triangle.vao);
-	glDrawElements(GL_TRIANGLES, triangle.face_indeces.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-}
-
-void Renderer::draw(Rect& rect)
-{
-	for (auto& triangle : rect.triangles)
-	{
-		draw(triangle);
-	}
-}
-
-void Renderer::draw(Sphere& sphere)
-{
-	for (auto& triangle : sphere.triangles)
-	{
-		draw(triangle);
-	}
 }
 
 void Renderer::checkGLErrors()

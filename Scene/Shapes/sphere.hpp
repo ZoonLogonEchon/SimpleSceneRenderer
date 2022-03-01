@@ -13,7 +13,7 @@ public:
 	Sphere(const std::string name);
 	~Sphere();
 
-	void draw();
+	void draw(OGLProgram& prog);
 	void bufferData(OGLProgram& prog, const std::string attrName);
 	unsigned int getPrimitivesCount();
 	std::vector<Triangle> triangles;

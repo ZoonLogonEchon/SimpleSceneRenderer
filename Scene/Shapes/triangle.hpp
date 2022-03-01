@@ -20,7 +20,7 @@ public:
 
 	~Triangle();
 
-	void draw();
+	void draw(OGLProgram& prog);
 	void bufferData(OGLProgram &prog, const std::string attrName);
 
 	void translate(const glm::vec3 vec);
@@ -30,6 +30,7 @@ public:
 	// for convenience
 	glm::mat4 getRotationMatrix();
 
+private:
 	std::string name;
 	GLuint vbo;
 	GLuint ebo;
@@ -38,10 +39,10 @@ public:
 	std::vector<unsigned int> face_indeces;
 	// rgb
 	glm::vec3 color;
+	glm::vec3 normal;
 	// of vertex at the right angle
 	glm::vec3 position;
 	glm::vec3 size;
 	glm::quat orientation;
-private:
 	void genBuffers();
 };

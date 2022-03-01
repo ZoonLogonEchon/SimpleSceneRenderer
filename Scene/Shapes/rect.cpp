@@ -10,16 +10,17 @@
 
 Rect::Rect(const std::string name)
 	:name(name)
+	,color(glm::vec3(1.0f, 0.0f, 0.0f))
 {
 	unsigned i = 0;
-	std::vector<float> a = {-0.5f, 0.5f, 1.0f};
-	std::vector<float> b =  {0.5f, 0.5f, 1.0f};
-	std::vector<float> c = {-0.5f, -0.5f, 1.0f};
-	std::vector<float> d =  {0.5f, -0.5f, 1.0f};
+	std::vector<float> a = {-0.5f, 0.5f, 0.0f};
+	std::vector<float> b =  {0.5f, 0.5f, 0.0f};
+	std::vector<float> c = {-0.5f, -0.5f, 0.0f};
+	std::vector<float> d =  {0.5f, -0.5f, 0.0f};
 
-
-	Triangle tabc("", { a, b, c });
-	Triangle tbcd("", { b, c, d });
+	//they have to be added clockwise for the normals to be correct
+	Triangle tabc(name + "_tabc", { a, b, c });
+	Triangle tbcd(name + "_tbcd", { b, d, c });
 
 	triangles.push_back(tabc);
 	triangles.push_back(tbcd);
@@ -40,10 +41,34 @@ void Rect::bufferData(OGLProgram& prog, const std::string attrName)
 	}
 }
 
-void Rect::draw()
+void Rect::translate(const glm::vec3 vec)
 {
 	for (auto& triangle : triangles)
 	{
-		triangle.draw();
+		triangle.translate(vec);
+	}
+}
+
+void Rect::scale(const glm::vec3 vec)
+{
+	for (auto& triangle : triangles)
+	{
+		triangle.scale(vec);
+	}
+}
+
+void Rect::rotate(const glm::quat q)
+{
+	for (auto& triangle : triangles)
+	{
+		triangle.rotate(q);
+	}
+}
+
+void Rect::draw(OGLProgram& prog)
+{
+	for (auto& triangle : triangles)
+	{
+		triangle.draw(prog);
 	}
 }

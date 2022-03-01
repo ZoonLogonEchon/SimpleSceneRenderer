@@ -10,9 +10,9 @@
 // todo redesign the overloaded constructors
 Triangle::Triangle(const std::string name) 
 	: Triangle(name, std::vector<float>({
-	 0.0f,  0.0f, 1.0f,  // center
-	 0.0f, 1.0f, 1.0f,  // top
-	 1.0f,  0.0f, 1.0f   // right
+	 0.0f,  0.0f, 0.0f,  // center
+	 0.0f, 1.0f, 0.0f,  // top
+	 1.0f,  0.0f, 0.0f   // right
 	}))
 {
 	
@@ -22,7 +22,7 @@ Triangle::Triangle(const std::string name)
 Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 	:name(name)
 	,color(glm::vec3(0.0f, 1.0f, 1.0f))
-	,position(glm::vec3(0.0f))
+	,position(glm::vec3(0.0f, 0.0f, 1.0f))
 	,size(1.0f)
 	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
 {
@@ -33,6 +33,13 @@ Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 	face_indeces = {  // note that we start from 0!
 	0, 1, 2  // first triangle
 	};
+	// gen normal
+	glm::vec3 vertex_001(vertices[0], vertices[1], vertices[2]);
+	glm::vec3 vertex_011(vertices[3], vertices[4], vertices[5]);
+	glm::vec3 vertex_101(vertices[6], vertices[7], vertices[8]);
+	glm::vec3 side_a = glm::normalize(vertex_011 - vertex_001);
+	glm::vec3 side_c = glm::normalize(vertex_101 - vertex_011);
+	normal = glm::normalize(glm::cross(side_a, side_c));
 	genBuffers();
 }
 
@@ -40,7 +47,7 @@ Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
 Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>& vertices)
 	:name(name)
 	,color(glm::vec3(0.0f, 1.0f, 1.0f))
-	,position(glm::vec3(0.0f))
+	,position(glm::vec3(0.0f, 0.0f, 1.0f))
 	,size(1.0f)
 	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
 {
@@ -54,6 +61,12 @@ Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>
 	face_indeces = {  // note that we start from 0!
 	0, 1, 2  // first triangle
 	};
+	glm::vec3 vertex_001(vertices[0][0], vertices[0][1], vertices[0][2]);
+	glm::vec3 vertex_011(vertices[1][0], vertices[1][1], vertices[1][2]);
+	glm::vec3 vertex_101(vertices[2][0], vertices[2][1], vertices[2][2]);
+	glm::vec3 side_a = glm::normalize(vertex_011 - vertex_001);
+	glm::vec3 side_c = glm::normalize(vertex_101 - vertex_011);
+	normal = glm::normalize(glm::cross(side_a, side_c));
 	genBuffers();
 }
 
@@ -104,8 +117,15 @@ glm::mat4 Triangle::getRotationMatrix()
 	return glm::toMat4(orientation);
 }
 
-void Triangle::draw()
+void Triangle::draw(OGLProgram &prog)
 {
+	prog.setUniformVector3("u_obj_color", color);
+	glm::mat4 model_transform = glm::mat4(1.0f);
+	model_transform = glm::translate(model_transform, position);
+	model_transform = glm::scale(model_transform,size);
+	model_transform = model_transform * getRotationMatrix();
+	prog.setUniformMatrix4("model_transform", model_transform);
+	prog.setUniformVector3("u_normal", normal);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, face_indeces.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

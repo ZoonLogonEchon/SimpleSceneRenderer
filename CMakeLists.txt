@@ -11,7 +11,8 @@ list(APPEND HPP_FILES
 		Renderer/OGLProgram.hpp
         Renderer/Shaders/shaderSources.hpp
 		Scene/camera.hpp
-		Scene/scene.hpp
+        Scene/scene.hpp
+        Scene/Shapes/cube.hpp
 		Scene/Shapes/rect.hpp
         Scene/Shapes/sphere.hpp
         Scene/Shapes/triangle.hpp
@@ -21,7 +22,8 @@ list(APPEND CPP_FILES
 		Renderer/renderer.cpp
 		Renderer/OGLProgram.cpp
 		Scene/camera.cpp
-		Scene/scene.cpp
+        Scene/scene.cpp
+        Scene/Shapes/cube.cpp
 		Scene/Shapes/rect.cpp
         Scene/Shapes/sphere.cpp
         Scene/Shapes/triangle.cpp

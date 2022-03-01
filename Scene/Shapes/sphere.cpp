@@ -57,12 +57,12 @@ void Sphere::bufferData(OGLProgram& prog, const std::string attrName)
 	}
 }
 
-void Sphere::draw()
+void Sphere::draw(OGLProgram& prog)
 {
 
 	for (auto& triangle : triangles)
 	{
-		triangle.draw();
+		//triangle.draw(prog);
 	}
 	
 }
