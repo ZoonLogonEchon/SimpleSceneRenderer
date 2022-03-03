@@ -45,10 +45,8 @@ void Renderer::init(Scene &scene)
 	m_prog.compileAndAttachShader(fSSrc.c_str(), GL_FRAGMENT_SHADER);
 	m_prog.link();
 
-	for (auto mapitem_triangle : scene.getTriangles())
-		mapitem_triangle.second.bufferData(m_prog, "aPos");
-	for (auto mapitem_rect : scene.getRects())
-		mapitem_rect.second.bufferData(m_prog, "aPos");
+	for (auto mapitem_triangle : scene.getShapes())
+		mapitem_triangle.second->bufferData(m_prog, "aPos");
 
 	glFinish();
 }
@@ -56,10 +54,12 @@ void Renderer::init(Scene &scene)
 
 void Renderer::render(Scene& scene)
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	
 	const float width = 800.0f;
 	const float height = 600.0f;
@@ -73,14 +73,9 @@ void Renderer::render(Scene& scene)
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
 	m_prog.setUniformVector3("u_camera_pos", scene.getMainCamera().eye);
-	for (auto &mapitem_triangle : scene.getTriangles())
-	{
-		mapitem_triangle.second.draw(m_prog);
-	}
-	for (auto& mapitem_rect : scene.getRects())
-	{
-		mapitem_rect.second.draw(m_prog);
-	}
+	for (auto &mapitem_triangle : scene.getShapes())
+		mapitem_triangle.second->draw(m_prog);
+	
 	glDisable(GL_BLEND);
 	glFinish();
 }

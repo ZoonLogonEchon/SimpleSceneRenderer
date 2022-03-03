@@ -9,84 +9,54 @@ Scene::~Scene()
 {
 }
 
+void Scene::addCube(const std::string name)
+{
+	shapes.insert({ name, std::make_shared<Cube>(name) });
+}
+
 void Scene::addTriangle(const std::string name)
 {
-	triangles.insert({ name, Triangle(name) });
+	shapes.insert({ name, std::make_shared<Triangle>(name) });
 }
 
-void Scene::translateTriangle(const std::string name, const glm::vec3 vec)
+void Scene::translateShape(const std::string name, const glm::vec3 vec)
 {
-	triangles.at(name).translate(vec);
+	shapes.at(name)->translate(vec);
 }
 
-void Scene::scaleTriangle(const std::string name, const glm::vec3 vec)
+void Scene::scaleShape(const std::string name, const glm::vec3 vec)
 {
-	triangles.at(name).scale(vec);
+	shapes.at(name)->scale(vec);
 }
 
-void Scene::scaleTriangle(const std::string name, const float factor)
+void Scene::scaleShape(const std::string name, const float factor)
 {
-	triangles.at(name).scale(glm::vec3(factor));
+	shapes.at(name)->scale(glm::vec3(factor));
 }
 
-void Scene::rotateTriangle(const std::string name, const glm::vec3 angles)
+void Scene::rotateShape(const std::string name, const glm::vec3 angles)
 {
-	triangles.at(name).rotate(glm::quat(angles));
+	shapes.at(name)->rotate(glm::quat(angles));
 }
 
-void Scene::rotateTriangle(const std::string name, const glm::quat q)
+void Scene::rotateShape(const std::string name, const glm::quat q)
 {
-	triangles.at(name).rotate(q);
+	shapes.at(name)->rotate(q);
 }
 
 void Scene::addRect(const std::string name)
 {
-	rects.insert({ name, Rect(name) });
-}
-
-void Scene::translateRect(const std::string name, const glm::vec3 vec)
-{
-	rects.at(name).translate(vec);
-}
-
-void Scene::scaleRect(const std::string name, const glm::vec3 vec)
-{
-	rects.at(name).scale(vec);
-}
-
-void Scene::scaleRect(const std::string name, const float factor)
-{
-	rects.at(name).scale(glm::vec3(factor));
-}
-
-void Scene::rotateRect(const std::string name, const glm::vec3 angles)
-{
-	rects.at(name).rotate(glm::quat(angles));
-}
-
-void Scene::rotateRect(const std::string name, const glm::quat q)
-{
-	rects.at(name).rotate(q);
+	shapes.insert({ name, std::make_shared<Rect>(name) });
 }
 
 void Scene::addSphere(const std::string name)
 {
-	spheres.insert({ name, Sphere(name) });
+	//shapes.insert({ name, std::make_shared<Sphere>(name) });
 }
 
-std::unordered_map<std::string, Rect>& Scene::getRects()
+std::unordered_map<std::string, std::shared_ptr<Shape>>& Scene::getShapes()
 {
-	return rects;
-}
-
-std::unordered_map<std::string, Sphere>& Scene::getSpheres()
-{
-	return spheres;
-}
-
-std::unordered_map<std::string, Triangle>& Scene::getTriangles()
-{
-	return triangles;
+	return shapes;
 }
 
 Camera& Scene::getMainCamera()

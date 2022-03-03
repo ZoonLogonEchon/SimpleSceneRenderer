@@ -7,67 +7,49 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-// todo redesign the overloaded constructors
-Triangle::Triangle(const std::string name) 
-	: Triangle(name, std::vector<float>({
-	 0.0f,  0.0f, 0.0f,  // center
-	 0.0f, 1.0f, 0.0f,  // top
-	 1.0f,  0.0f, 0.0f   // right
-	}))
+
+Triangle::Triangle(const std::string name, const glm::vec3 o_scale, const glm::vec3 o_rotation, const glm::vec3 o_translation)
+	:position(glm::vec3(0.0f, 0.0f, 1.0f))
+	,size(1.0f)
+	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
 {
+	this->name = name;
+	color = glm::vec3(0.0f, 1.0f, 1.0f);
+	glm::vec3 center(0.0f, 0.0f, 0.0f);
+	glm::vec3 top(0.0f, 0.5f, 0.0f);
+	glm::vec3 right(0.5f, 0.0f, 0.0f);
+	//center = objSpaceTransformations(center, o_scale, o_rotation, o_translation);
+	//top = objSpaceTransformations(top, o_scale, o_rotation, o_translation);
+	//right = objSpaceTransformations(right, o_scale, o_rotation, o_translation);
+	std::vector<float> t({
+		center[0], center[1], center[2],  // center
+		top[0], top[1], top[2],  // top
+		right[0],  right[1], right[2]   // right
+	});
 	
-}
-
-
-Triangle::Triangle(const std::string name, const std::vector<float>& vertices)
-	:name(name)
-	,color(glm::vec3(0.0f, 1.0f, 1.0f))
-	,position(glm::vec3(0.0f, 0.0f, 1.0f))
-	,size(1.0f)
-	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
-{
-	for (const auto comp : vertices)
-	{
-		this->vertices.push_back(comp);
-	}
+	vertices = t;
+	applyObjSpaceTransformations(o_scale, o_rotation, o_translation);
 	face_indeces = {  // note that we start from 0!
-	0, 1, 2  // first triangle
+		0, 1, 2  // first triangle
 	};
-	// gen normal
-	glm::vec3 vertex_001(vertices[0], vertices[1], vertices[2]);
-	glm::vec3 vertex_011(vertices[3], vertices[4], vertices[5]);
-	glm::vec3 vertex_101(vertices[6], vertices[7], vertices[8]);
-	glm::vec3 side_a = glm::normalize(vertex_011 - vertex_001);
-	glm::vec3 side_c = glm::normalize(vertex_101 - vertex_011);
+	
+	center = glm::vec3(vertices[0], vertices[1], vertices[2]);
+	top = glm::vec3(vertices[3], vertices[4], vertices[5]);
+	right = glm::vec3(vertices[6], vertices[7], vertices[8]);
+	glm::vec3 side_a = glm::normalize(top - center);
+	glm::vec3 side_c = glm::normalize(right - top);
 	normal = glm::normalize(glm::cross(side_a, side_c));
 	genBuffers();
 }
 
-
-Triangle::Triangle(const std::string name, const std::vector<std::vector<float>>& vertices)
-	:name(name)
-	,color(glm::vec3(0.0f, 1.0f, 1.0f))
-	,position(glm::vec3(0.0f, 0.0f, 1.0f))
-	,size(1.0f)
-	,orientation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f))
+glm::vec3 Triangle::objSpaceTransformations(glm::vec3 point, glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
 {
-	for (const auto vertex : vertices)
-	{
-		for (const auto comp : vertex)
-		{
-			this->vertices.push_back(comp);
-		}
-	}
-	face_indeces = {  // note that we start from 0!
-	0, 1, 2  // first triangle
-	};
-	glm::vec3 vertex_001(vertices[0][0], vertices[0][1], vertices[0][2]);
-	glm::vec3 vertex_011(vertices[1][0], vertices[1][1], vertices[1][2]);
-	glm::vec3 vertex_101(vertices[2][0], vertices[2][1], vertices[2][2]);
-	glm::vec3 side_a = glm::normalize(vertex_011 - vertex_001);
-	glm::vec3 side_c = glm::normalize(vertex_101 - vertex_011);
-	normal = glm::normalize(glm::cross(side_a, side_c));
-	genBuffers();
+	glm::vec4 p(point, 1.0f);
+	glm::quat q_rot(rotation);
+	glm::vec4 s_p = glm::scale(glm::mat4(1.0f), scale) * p;
+	glm::vec4 rs_p = glm::toMat4(q_rot) * s_p;
+	glm::vec4 trs_p = glm::translate(glm::mat4(1.0f), translation) * rs_p;
+	return glm::vec3(trs_p);
 }
 
 void Triangle::genBuffers()
@@ -79,8 +61,9 @@ void Triangle::genBuffers()
 
 Triangle::~Triangle()
 {
-	//glDeleteBuffers(1, &m_vbo);
-	//glDeleteBuffers(1, &m_ebo);
+	//glDeleteBuffers(1, &vbo);
+	//glDeleteBuffers(1, &ebo);
+	//glDeleteVertexArrays(1, &vao);
 }
 
 void Triangle::bufferData(OGLProgram& prog, const std::string attrName)
@@ -112,9 +95,36 @@ void Triangle::rotate(const glm::quat q)
 	orientation *= q;
 }
 
+void Triangle::setColor(const glm::vec3 col)
+{
+	color = col;
+}
+
 glm::mat4 Triangle::getRotationMatrix()
 {
 	return glm::toMat4(orientation);
+}
+
+void Triangle::applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
+{
+	glm::vec3 center(vertices[0], vertices[1], vertices[2]);
+	glm::vec3 top(vertices[3], vertices[4], vertices[5]);
+	glm::vec3 right(vertices[6], vertices[7], vertices[8]);
+	center = objSpaceTransformations(center, scale, rotation, translation);
+	top = objSpaceTransformations(top, scale, rotation, translation);
+	right = objSpaceTransformations(right, scale, rotation, translation);
+	std::vector<float> t({
+		center[0], center[1], center[2],  // center
+		top[0], top[1], top[2],  // top
+		right[0],  right[1], right[2]   // right
+	});
+	vertices = t;
+	center = glm::vec3(vertices[0], vertices[1], vertices[2]);
+	top = glm::vec3(vertices[3], vertices[4], vertices[5]);
+	right = glm::vec3(vertices[6], vertices[7], vertices[8]);
+	glm::vec3 side_a = glm::normalize(top - center);
+	glm::vec3 side_c = glm::normalize(right - top);
+	normal = glm::normalize(glm::cross(side_a, side_c));
 }
 
 void Triangle::draw(OGLProgram &prog)

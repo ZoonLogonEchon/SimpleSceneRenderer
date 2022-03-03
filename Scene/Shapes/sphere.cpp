@@ -19,23 +19,23 @@ Sphere::Sphere(const std::string name)
 	std::pair<std::vector<float>, unsigned> f = { {0.0, 0.0, 0.5}, i++ };
 
 
-	Triangle tade("",{ a.first, d.first, e.first });
-	Triangle tace("", { a.first, c.first, e.first });
-	Triangle tacf("", { a.first, c.first, f.first });
-	Triangle tadf("", { a.first, d.first, f.first });
-	Triangle tbde("", { b.first, d.first, e.first });
-	Triangle tbce("", { b.first, c.first, e.first });
-	Triangle tbcf("", { b.first, c.first, f.first });
-	Triangle tbdf("", { b.first, d.first, f.first });
+	//Triangle tade("",{ a.first, d.first, e.first });
+	//Triangle tace("", { a.first, c.first, e.first });
+	//Triangle tacf("", { a.first, c.first, f.first });
+	//Triangle tadf("", { a.first, d.first, f.first });
+	//Triangle tbde("", { b.first, d.first, e.first });
+	//Triangle tbce("", { b.first, c.first, e.first });
+	//Triangle tbcf("", { b.first, c.first, f.first });
+	//Triangle tbdf("", { b.first, d.first, f.first });
 
-	triangles.push_back(tade);
-	triangles.push_back(tace);
-	triangles.push_back(tacf);
-	triangles.push_back(tadf);
-	triangles.push_back(tbde);
-	triangles.push_back(tbce);
-	triangles.push_back(tbcf);
-	triangles.push_back(tbdf);
+	//triangles.push_back(tade);
+	//triangles.push_back(tace);
+	//triangles.push_back(tacf);
+	//triangles.push_back(tadf);
+	//triangles.push_back(tbde);
+	//triangles.push_back(tbce);
+	//triangles.push_back(tbcf);
+	//triangles.push_back(tbdf);
 }
 
 Sphere::~Sphere()

@@ -12,6 +12,7 @@ list(APPEND HPP_FILES
         Renderer/Shaders/shaderSources.hpp
 		Scene/camera.hpp
         Scene/scene.hpp
+        Scene/Shapes/shape.hpp
         Scene/Shapes/cube.hpp
 		Scene/Shapes/rect.hpp
         Scene/Shapes/sphere.hpp

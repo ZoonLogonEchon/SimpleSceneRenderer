@@ -8,22 +8,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Rect::Rect(const std::string name)
-	:name(name)
-	,color(glm::vec3(1.0f, 0.0f, 0.0f))
+Rect::Rect(const std::string name, const glm::vec3 o_scale, const glm::vec3 o_rotation, const glm::vec3 o_translation)
 {
-	unsigned i = 0;
-	std::vector<float> a = {-0.5f, 0.5f, 0.0f};
-	std::vector<float> b =  {0.5f, 0.5f, 0.0f};
-	std::vector<float> c = {-0.5f, -0.5f, 0.0f};
-	std::vector<float> d =  {0.5f, -0.5f, 0.0f};
+	this->name = name;
+	color = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 l_translation_tabc = glm::vec3(-0.25f, -0.25f, 0.0f);
+	glm::vec3 l_translation_tbdc = glm::vec3(0.25f, 0.25f, 0.0f);
+	Triangle tabc(name + "_tabc", glm::vec3(1.0f), glm::vec3(0.0f), l_translation_tabc);
+	Triangle tbdc(name + "_tbdc", glm::vec3(1.0f), glm::vec3(0.0f, 0.0f, glm::radians(180.0f)), l_translation_tbdc);
 
-	//they have to be added clockwise for the normals to be correct
-	Triangle tabc(name + "_tabc", { a, b, c });
-	Triangle tbcd(name + "_tbcd", { b, d, c });
-
+	tabc.applyObjSpaceTransformations(o_scale, o_rotation, o_translation);
+	tbdc.applyObjSpaceTransformations(o_scale, o_rotation, o_translation);
 	triangles.push_back(tabc);
-	triangles.push_back(tbcd);
+	triangles.push_back(tbdc);
 }
 
 
@@ -62,6 +59,14 @@ void Rect::rotate(const glm::quat q)
 	for (auto& triangle : triangles)
 	{
 		triangle.rotate(q);
+	}
+}
+
+void Rect::setColor(const glm::vec3 col)
+{
+	for(auto &triangle : triangles)
+	{
+		triangle.setColor(col);
 	}
 }
 
