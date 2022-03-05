@@ -83,6 +83,12 @@ void OGLProgram::setUniformVector4(const char* uniform_name, const glm::vec4& ve
 	glUniform4fv(uni_proj_loc, 1, &vec[0]);
 }
 
+void OGLProgram::setUniformInt(const char* uniform_name, const int& value)
+{
+	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
+	glUniform1i(uni_proj_loc, value);
+}
+
 void OGLProgram::setUniformFloat(const char* uniform_name, const float& value)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);

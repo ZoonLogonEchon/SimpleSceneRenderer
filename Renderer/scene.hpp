@@ -12,6 +12,9 @@
 #include "Shapes/sphere.hpp"
 #include "Shapes/cube.hpp"
 #include "Shapes/shape.hpp"
+
+#include "Lights/point_light.hpp"
+
 class Scene {
 public:
 	Scene(const std::string name);
@@ -32,10 +35,13 @@ public:
 	void rotateShape(const std::string name, const glm::vec3 angles);
 	void rotateShape(const std::string name, const glm::quat q);
 
+	void addPointLight(const std::string name);
 
 	std::unordered_map<std::string, std::shared_ptr<Shape>>& getShapes();
 
 	Camera &getMainCamera();
+	// temporary function
+	std::unordered_map<std::string, std::shared_ptr<PointLight>> getPointLights();
 	// void toggleGlobalLight();
 	// void setGlobalLight(glm::vec3 dir, glm::vec3 color);
 private:
@@ -43,7 +49,8 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<Shape>> shapes;
 	// including active camera
 	std::unordered_map<std::string, Camera> cameras;
-	// excluding global light
-	// std::unorder_map<std::string, Light> lights;
+	
+	std::unordered_map<std::string, std::shared_ptr<PointLight>> pointLights;
+
 	std::string nameActiveCamera;
 };

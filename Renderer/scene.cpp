@@ -44,6 +44,11 @@ void Scene::rotateShape(const std::string name, const glm::quat q)
 	shapes.at(name)->rotate(q);
 }
 
+void Scene::addPointLight(const std::string name)
+{
+	pointLights.insert({ name, std::make_shared<PointLight>(name) });
+}
+
 void Scene::addRect(const std::string name)
 {
 	shapes.insert({ name, std::make_shared<Rect>(name) });
@@ -62,4 +67,9 @@ std::unordered_map<std::string, std::shared_ptr<Shape>>& Scene::getShapes()
 Camera& Scene::getMainCamera()
 {
 	return cameras["MainCamera"];
+}
+
+std::unordered_map<std::string, std::shared_ptr<PointLight>> Scene::getPointLights()
+{
+	return pointLights;
 }

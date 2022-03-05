@@ -28,7 +28,7 @@ public:
 	void setUniformVector4(const char* uniform_name, const glm::vec4 &vec);
 
 	//void setBool(const std::string& name, bool value);
-	//void setInt(const std::string& name, int value);
+	void setUniformInt(const char* uniform_name, const int &value);
 	void setUniformFloat(const char* uniform_name, const float &value);
 private:
 	GLuint m_program_handle;

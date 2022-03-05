@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <random>
-
+#include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -73,6 +73,22 @@ void Renderer::render(Scene& scene)
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
 	m_prog.setUniformVector3("u_camera_pos", scene.getMainCamera().eye);
+	m_prog.setUniformInt("u_num_point_lights", scene.getPointLights().size());
+	int light_index = 0;
+	for (auto& mapitem_point_light : scene.getPointLights())
+	{
+		std::string indexed_p_light_str = "u_point_lights[" + std::to_string(light_index) + "]";
+		std::string indexed_p_light_position_str = indexed_p_light_str + ".position";
+		std::string indexed_p_light_ambient_str = indexed_p_light_str + ".ambient";
+		std::string indexed_p_light_diffuse_str = indexed_p_light_str + ".diffuse";
+		std::string indexed_p_light_specular_str = indexed_p_light_str + ".specular";
+		m_prog.setUniformVector3(indexed_p_light_position_str.c_str(), mapitem_point_light.second->position);
+		m_prog.setUniformVector3(indexed_p_light_ambient_str.c_str(), mapitem_point_light.second->ambient);
+		m_prog.setUniformVector3(indexed_p_light_diffuse_str.c_str(), mapitem_point_light.second->diffuse);
+		m_prog.setUniformVector3(indexed_p_light_specular_str.c_str(), mapitem_point_light.second->specular);
+		++light_index;
+	}
+		
 	for (auto &mapitem_triangle : scene.getShapes())
 		mapitem_triangle.second->draw(m_prog);
 	

@@ -63,13 +63,14 @@ int main(int argc, char* argv[])
 	}
 
 	// build Scene 
-	std::string tr_name = "test_triangle";
 	std::string rc_name = "test_rect";
 	std::string cu_name = "test_cube";
+	std::string pl_name = "test_point_light";
 	Scene sc("my scene");
 	//sc.addTriangle(tr_name);
 	//sc.addRect(rc_name);
 	sc.addCube(cu_name);
+	sc.addPointLight(pl_name);
 	//sc.scaleTriangle(tr_name, glm::vec3(30.0f, 30.0f, 1.0f));
 	//sc.rotateTriangle(tr_name, glm::vec3(0.0f, 0.0f, glm::radians(45.0f)));
 	//sc.translateTriangle(tr_name, glm::vec3(0.0f, -10.0f, 0.0f));
