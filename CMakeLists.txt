@@ -7,27 +7,29 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 
 list(APPEND HPP_FILES
+        Renderer/Lights/point_light.hpp
+        Renderer/OpenGLUtils/opengl_program.hpp
+        Renderer/Shaders/shader_sources.hpp
+        Renderer/Shapes/shape.hpp
+        Renderer/Shapes/cube.hpp
+		Renderer/Shapes/rect.hpp
+        Renderer/Shapes/sphere.hpp
+        Renderer/Shapes/triangle.hpp
         Renderer/renderer.hpp
-		Renderer/OGLProgram.hpp
-        Renderer/Shaders/shaderSources.hpp
-		Scene/camera.hpp
-        Scene/scene.hpp
-        Scene/Shapes/shape.hpp
-        Scene/Shapes/cube.hpp
-		Scene/Shapes/rect.hpp
-        Scene/Shapes/sphere.hpp
-        Scene/Shapes/triangle.hpp
+		Renderer/camera.hpp
+        Renderer/scene.hpp
 )
 list(APPEND CPP_FILES 
-		main.cpp
-		Renderer/renderer.cpp
-		Renderer/OGLProgram.cpp
-		Scene/camera.cpp
-        Scene/scene.cpp
-        Scene/Shapes/cube.cpp
-		Scene/Shapes/rect.cpp
-        Scene/Shapes/sphere.cpp
-        Scene/Shapes/triangle.cpp
+        Renderer/Lights/point_light.cpp
+        Renderer/OpenGLUtils/opengl_program.cpp
+        Renderer/Shapes/cube.cpp
+		Renderer/Shapes/rect.cpp
+        Renderer/Shapes/sphere.cpp
+        Renderer/Shapes/triangle.cpp
+        Renderer/camera.cpp
+        Renderer/renderer.cpp
+        Renderer/scene.cpp
+        main.cpp
 )
 list(APPEND H_FILES 
 		glad/glad.h

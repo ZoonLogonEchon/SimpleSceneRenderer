@@ -7,7 +7,7 @@
 #include "rect.hpp"
 #include "shape.hpp"
 
-#include "../../Renderer/OGLProgram.hpp"
+#include "../OpenGLUtils/opengl_program.hpp"
 
 // cube built from rects (triangles would also be a possible implementation)
 class Cube : public Shape

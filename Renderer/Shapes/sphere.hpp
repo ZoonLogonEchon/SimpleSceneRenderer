@@ -3,7 +3,7 @@
 #include "../../glad/glad.h"
 #include <vector>
 
-#include "../../Renderer/OGLProgram.hpp"
+#include "../OpenGLUtils/opengl_program.hpp"
 
 #include "triangle.hpp"
 

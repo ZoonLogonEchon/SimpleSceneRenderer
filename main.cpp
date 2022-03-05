@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 
 #include "Renderer/renderer.hpp"
-#include "Scene/scene.hpp"
+#include "Renderer/scene.hpp"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -85,18 +85,12 @@ int main(int argc, char* argv[])
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetKeyCallback(window, key_callback);
-	double run_time;
 
-
-	size_t t = 0;
-	float simulation_time = 0.0f;
 	const unsigned fps = 30;
 	const float d_t = 1.0f / fps;
 	float frame_time = 0.0;
-	int test = 0;
 	while (!glfwWindowShouldClose(window))
 	{
-		// processInput
 		auto start = std::chrono::system_clock::now();
 		if (frame_time >= d_t)
 		{

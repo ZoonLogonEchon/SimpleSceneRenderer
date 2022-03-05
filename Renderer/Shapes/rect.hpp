@@ -7,7 +7,7 @@
 #include "triangle.hpp"
 
 
-#include "../../Renderer/OGLProgram.hpp"
+#include "../OpenGLUtils/opengl_program.hpp"
 
 class Rect : public Shape
 {

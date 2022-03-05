@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "OGLProgram.hpp"
+#include "opengl_program.hpp"
 
 OGLProgram::OGLProgram()
 	:m_program_handle(glCreateProgram())

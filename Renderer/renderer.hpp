@@ -4,13 +4,13 @@
 
 #include "../glad/glad.h"
 
-#include "../Scene/scene.hpp"
+#include "scene.hpp"
 
-#include "../Scene/Shapes/triangle.hpp"
-#include "../Scene/Shapes/rect.hpp"
-#include "../Scene/Shapes/sphere.hpp"
+#include "Shapes/triangle.hpp"
+#include "Shapes/rect.hpp"
+#include "Shapes/sphere.hpp"
 
-#include "OGLProgram.hpp"
+#include "OpenGLUtils/opengl_program.hpp"
 
 typedef Sphere ParticleRenderObject;
 

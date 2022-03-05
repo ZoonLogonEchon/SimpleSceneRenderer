@@ -8,7 +8,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include "../../Renderer/OGLProgram.hpp"
+#include "../OpenGLUtils/opengl_program.hpp"
 #include "shape.hpp"
 
 class Triangle : public Shape

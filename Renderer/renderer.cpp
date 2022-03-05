@@ -6,8 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "renderer.hpp"
-#include "../Scene/Shapes/sphere.hpp"
-#include "Shaders/shaderSources.hpp"
+#include "Shapes/sphere.hpp"
+#include "Shaders/shader_sources.hpp"
 
 Renderer::Renderer() 
 {
