@@ -7,7 +7,7 @@
 
 #include "renderer.hpp"
 #include "Shapes/sphere.hpp"
-#include "Shaders/shader_sources.hpp"
+#include "Shaders/shaders.hpp"
 
 Renderer::Renderer() 
 {
@@ -38,8 +38,8 @@ void Renderer::init(Scene &scene)
 	glDebugMessageCallback(MessageCallback, 0);
 
 	// simple program
-	std::string vSSrc = ShaderSources::getVertexShader();
-	std::string fSSrc = ShaderSources::getFragmentShader();
+	std::string vSSrc = Shaders::getVertexShader();
+	std::string fSSrc = Shaders::getFragmentShader();
 
 	m_prog.compileAndAttachShader(vSSrc.c_str(), GL_VERTEX_SHADER);
 	m_prog.compileAndAttachShader(fSSrc.c_str(), GL_FRAGMENT_SHADER);
