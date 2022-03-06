@@ -26,6 +26,6 @@ public:
 private:
 
 	OGLProgram m_prog;
-
+	OGLProgram nonShadingProgam;
 	void checkGLErrors();
 };

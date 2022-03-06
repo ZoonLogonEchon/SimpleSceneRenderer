@@ -3,6 +3,8 @@
  #version 460 core\n\
  layout (location = 0) in vec3 aPos;\n\
  out vec3 aFragPos;\n\
+ out vec3 u_transformed_normal;\n\
+ uniform vec3 u_normal;\n\
  uniform mat4 projection;\n\
  uniform mat4 view_transform;\n\
  uniform mat4 model_transform;\n\
@@ -10,12 +12,14 @@
  void main()\n\
  {\n\
     mat4 pvm = projection * view_transform * model_transform;\n\
+    u_transformed_normal = mat3(transpose(u_inv_model_transform)) * u_normal;\n\
     aFragPos = vec3(model_transform * vec4(aPos, 1.0));\n\
     gl_Position = pvm * vec4(aPos, 1.0);\n\
  }\n"
 #define FS_SIMPLE_SHADER_STRING "\
  #version 460 core\n\
  in vec3 aFragPos;\n\
+ in vec3 u_transformed_normal;\n\
  out vec4 FragColor;\n\
  #define MAX_NUM_POINT_LIGHTS 128\n\
  struct PointLight {\n\
@@ -24,7 +28,6 @@
  	vec3 diffuse;\n\
  	vec3 specular;\n\
  };\n\
- uniform vec3 u_normal;\n\
  uniform vec3 u_obj_color;\n\
  uniform vec3 u_light_dir;\n\
  uniform vec3 u_camera_pos;\n\
@@ -51,7 +54,7 @@
  }\n\
  void main()\n\
  {\n\
- 	vec3 normal = normalize(u_normal);\n\
+ 	vec3 normal = normalize(u_transformed_normal);\n\
  	vec3 view_dir = normalize(u_camera_pos - aFragPos);\n\
  	vec3 out_color = vec3(0.0, 0.0, 0.0);\n\
  	for (int i = 0; i < u_num_point_lights; ++i)\n\
@@ -63,4 +66,24 @@
  		out_color = out_color + get_spec_color(u_point_lights[i], view_dir, reflect_dir);\n\
  	}\n\
  	FragColor = vec4(out_color, 1.0);\n\
+ }\n"
+
+#define VS_NON_SHADING_SHADER_STRING "\
+ #version 460 core\n\
+ layout (location = 1) in vec3 aPos;\n\
+ uniform mat4 projection;\n\
+ uniform mat4 view_transform;\n\
+ uniform mat4 model_transform;\n\
+ void main()\n\
+ {\n\
+    mat4 pvm = projection * view_transform * model_transform;\n\
+    gl_Position = pvm * vec4(aPos, 1.0);\n\
+ }\n"
+#define FS_NON_SHADING_SHADER_STRING "\
+ #version 460 core\n\
+ out vec4 FragColor;\n\
+ uniform vec3 u_obj_color;\n\
+ void main()\n\
+ {\n\
+ 	FragColor = vec4(u_obj_color, 1.0);\n\
  }\n"

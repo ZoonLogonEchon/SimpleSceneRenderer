@@ -68,31 +68,31 @@ void OGLProgram::setUniformMatrix4(const char* uniform_name, const glm::mat4& ma
 {
 	
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name); 
-	glUniformMatrix4fv(uni_proj_loc, 1, GL_FALSE, &mat[0][0]);
+	if (uni_proj_loc != -1) glUniformMatrix4fv(uni_proj_loc, 1, GL_FALSE, &mat[0][0]);
 }
 
 void OGLProgram::setUniformVector3(const char* uniform_name, const glm::vec3& vec)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
-	glUniform3fv(uni_proj_loc, 1, &vec[0]);
+	if (uni_proj_loc != -1) glUniform3fv(uni_proj_loc, 1, &vec[0]);
 }
 
 void OGLProgram::setUniformVector4(const char* uniform_name, const glm::vec4& vec)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
-	glUniform4fv(uni_proj_loc, 1, &vec[0]);
+	if (uni_proj_loc != -1) glUniform4fv(uni_proj_loc, 1, &vec[0]);
 }
 
 void OGLProgram::setUniformInt(const char* uniform_name, const int& value)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
-	glUniform1i(uni_proj_loc, value);
+	if (uni_proj_loc != -1) glUniform1i(uni_proj_loc, value);
 }
 
 void OGLProgram::setUniformFloat(const char* uniform_name, const float& value)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
-	glUniform1f(uni_proj_loc, value);
+	if (uni_proj_loc != -1) glUniform1f(uni_proj_loc, value);
 }
 
 void OGLProgram::compileShader(const GLuint& shader_handle)

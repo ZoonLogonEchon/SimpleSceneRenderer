@@ -37,8 +37,8 @@ Triangle::Triangle(const std::string name, const glm::vec3 o_scale, const glm::v
 	top = glm::vec3(vertices[3], vertices[4], vertices[5]);
 	right = glm::vec3(vertices[6], vertices[7], vertices[8]);
 	glm::vec3 side_a = glm::normalize(top - center);
-	glm::vec3 side_c = glm::normalize(right - top);
-	normal = glm::normalize(glm::cross(side_a, side_c));
+	glm::vec3 side_c = glm::normalize(right - center);
+	normal = glm::normalize(glm::cross(side_c, side_a));
 	genBuffers();
 }
 
@@ -123,8 +123,8 @@ void Triangle::applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation,
 	top = glm::vec3(vertices[3], vertices[4], vertices[5]);
 	right = glm::vec3(vertices[6], vertices[7], vertices[8]);
 	glm::vec3 side_a = glm::normalize(top - center);
-	glm::vec3 side_c = glm::normalize(right - top);
-	normal = glm::normalize(glm::cross(side_a, side_c));
+	glm::vec3 side_c = glm::normalize(right - center);
+	normal = glm::normalize(glm::cross(side_c, side_a));
 }
 
 void Triangle::draw(OGLProgram &prog)
@@ -136,6 +136,8 @@ void Triangle::draw(OGLProgram &prog)
 	model_transform = model_transform * getRotationMatrix();
 	prog.setUniformMatrix4("model_transform", model_transform);
 	prog.setUniformVector3("u_normal", normal);
+	prog.setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
+	prog.use();
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, face_indeces.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

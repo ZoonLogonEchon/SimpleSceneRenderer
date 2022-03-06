@@ -49,6 +49,11 @@ void Scene::addPointLight(const std::string name)
 	pointLights.insert({ name, std::make_shared<PointLight>(name) });
 }
 
+void Scene::translatePointLight(const std::string name, const glm::vec3 vec)
+{
+	pointLights[name]->translate(vec);
+}
+
 void Scene::addRect(const std::string name)
 {
 	shapes.insert({ name, std::make_shared<Rect>(name) });

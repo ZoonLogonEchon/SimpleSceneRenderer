@@ -1,5 +1,6 @@
 #version 460 core
 in vec3 aFragPos;
+in vec3 u_transformed_normal;
 out vec4 FragColor;
 #define MAX_NUM_POINT_LIGHTS 128
 struct PointLight {
@@ -9,7 +10,6 @@ struct PointLight {
 	vec3 specular;
 };
 
-uniform vec3 u_normal;
 uniform vec3 u_obj_color;
 uniform vec3 u_light_dir;
 uniform vec3 u_camera_pos;
@@ -38,7 +38,7 @@ vec3 get_spec_color(PointLight point_light, vec3 view_dir, vec3 reflect_dir)
 }
 void main()
 {
-	vec3 normal = normalize(u_normal);
+	vec3 normal = normalize(u_transformed_normal);
 	vec3 view_dir = normalize(u_camera_pos - aFragPos);
 	vec3 out_color = vec3(0.0, 0.0, 0.0);
 	for (int i = 0; i < u_num_point_lights; ++i)

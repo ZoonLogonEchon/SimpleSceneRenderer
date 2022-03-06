@@ -37,6 +37,8 @@ public:
 
 	void addPointLight(const std::string name);
 
+	void translatePointLight(const std::string name, const glm::vec3 vec);
+
 	std::unordered_map<std::string, std::shared_ptr<Shape>>& getShapes();
 
 	Camera &getMainCamera();

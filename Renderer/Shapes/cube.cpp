@@ -16,19 +16,19 @@ Cube::Cube(const std::string name)
 	Rect f1(name + "_ffront", glm::vec3(1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.25f));
 	f1.setColor(glm::vec3(1.0f, 0.0f, 0.0f)); // red
 	// top face
-	Rect f2(name + "_ftop", glm::vec3(1.0f), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.0f, 0.25f, 0.0f));
+	Rect f2(name + "_ftop", glm::vec3(1.0f), glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(0.0f, 0.25f, 0.0f));
 	f2.setColor(glm::vec3(0.0f, 1.0f, 0.0f)); // green
 	// back face
 	Rect f3(name + "_fback", glm::vec3(1.0f), glm::vec3(glm::radians(180.0f), 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -0.25f));
 	f3.setColor(glm::vec3(0.0f, 0.0f, 1.0f)); // blue
 	// bottom face
-	Rect f4(name + "_fbottom", glm::vec3(1.0f), glm::vec3(glm::radians(270.0f), 0.0f, 0.0f), glm::vec3(0.0f, -0.25f, 0.0f));
+	Rect f4(name + "_fbottom", glm::vec3(1.0f), glm::vec3(glm::radians(90.0f), 0.0f, 0.0f), glm::vec3(0.0f, -0.25f, 0.0f));
 	f4.setColor(glm::vec3(0.0f, 1.0f, 1.0f)); // turkis
 	// left face
 	Rect f5(name + "_fleft", glm::vec3(1.0f), glm::vec3(0.0f, glm::radians(90.0f), 0.0f), glm::vec3(-0.25f, 0.0f, 0.0f));
 	f5.setColor(glm::vec3(1.0f, 1.0f, 0.0f)); // yellow
 	// right face
-	Rect f6(name + "_fleft", glm::vec3(1.0f), glm::vec3(0.0f, glm::radians(270.0f), 0.0f), glm::vec3(0.25f, 0.0f, 0.0f));
+	Rect f6(name + "_fleft", glm::vec3(1.0f), glm::vec3(0.0f, glm::radians(-90.0f), 0.0f), glm::vec3(0.25f, 0.0f, 0.0f));
 	f6.setColor(glm::vec3(1.0f, 1.0f, 1.0f)); // white
 
 	rects.push_back(f1);

@@ -44,6 +44,8 @@ list(APPEND C_FILES
 list(APPEND GLSL_FILES
     Renderer/Shaders/vs_simple_shader.glsl
     Renderer/Shaders/fs_simple_shader.glsl
+    Renderer/Shaders/vs_non_shading_shader.glsl
+    Renderer/Shaders/fs_non_shading_shader.glsl
 )
 set(EXECUTABLE SimpleRenderer)
 add_executable(${EXECUTABLE})
@@ -57,8 +59,12 @@ target_sources(${EXECUTABLE}
 )
 set(VS_SIMPLE_SHADER_STRING "")
 set(FS_SIMPLE_SHADER_STRING "")
+set(VS_NON_SHADING_SHADER_STRING "")
+set(FS_NON_SHADING_SHADER_STRING "")
 read_into_string("${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/vs_simple_shader.glsl" VS_SIMPLE_SHADER_STRING)
 read_into_string("${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/fs_simple_shader.glsl" FS_SIMPLE_SHADER_STRING)
+read_into_string("${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/vs_non_shading_shader.glsl" VS_NON_SHADING_SHADER_STRING)
+read_into_string("${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/fs_non_shading_shader.glsl" FS_NON_SHADING_SHADER_STRING)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/shader_sources.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/Renderer/Shaders/shader_sources.hpp" @ONLY)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${CPP_FILES} ${HPP_FILES} ${GLSL_FILES})
 target_compile_features(${EXECUTABLE} PRIVATE cxx_std_17)

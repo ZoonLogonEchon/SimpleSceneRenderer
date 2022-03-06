@@ -37,7 +37,7 @@ void Renderer::init(Scene &scene)
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
 
-	// simple program
+	// phong shading program
 	std::string vSSrc = Shaders::getVertexShader();
 	std::string fSSrc = Shaders::getFragmentShader();
 
@@ -47,6 +47,17 @@ void Renderer::init(Scene &scene)
 
 	for (auto mapitem_triangle : scene.getShapes())
 		mapitem_triangle.second->bufferData(m_prog, "aPos");
+	// no shading program
+	std::string vnss_str = Shaders::getVertexNonShadingShader();
+	std::string fnss_str = Shaders::getFragmentNonShadingShader();
+
+	nonShadingProgam.compileAndAttachShader(vnss_str.c_str(), GL_VERTEX_SHADER);
+	nonShadingProgam.compileAndAttachShader(fnss_str.c_str(), GL_FRAGMENT_SHADER);
+	nonShadingProgam.link();
+
+	for (auto& mapitem_point_light : scene.getPointLights())
+		mapitem_point_light.second->bufferData(nonShadingProgam, "aPos");
+		
 
 	glFinish();
 }
@@ -73,6 +84,9 @@ void Renderer::render(Scene& scene)
 	m_prog.setUniformMatrix4("projection", proj);
 	m_prog.setUniformMatrix4("view_transform", view_transform);
 	m_prog.setUniformVector3("u_camera_pos", scene.getMainCamera().eye);
+
+	// render point lights as cubes without shading (not even)
+
 	m_prog.setUniformInt("u_num_point_lights", scene.getPointLights().size());
 	int light_index = 0;
 	for (auto& mapitem_point_light : scene.getPointLights())
@@ -92,6 +106,14 @@ void Renderer::render(Scene& scene)
 	for (auto &mapitem_triangle : scene.getShapes())
 		mapitem_triangle.second->draw(m_prog);
 	
+	// draw lights as cubes
+	nonShadingProgam.use();
+	nonShadingProgam.setUniformMatrix4("projection", proj);
+	nonShadingProgam.setUniformMatrix4("view_transform", view_transform);
+
+	for (auto& mapitem_point_light : scene.getPointLights())
+		mapitem_point_light.second->draw(nonShadingProgam);
+
 	glDisable(GL_BLEND);
 	glFinish();
 }

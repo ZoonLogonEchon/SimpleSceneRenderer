@@ -4,12 +4,18 @@
 namespace Shaders {
 	std::string getVertexShader() 
 	{
-		std::string src(VS_SIMPLE_SHADER_STRING);
-		return src;
+		return std::string(VS_SIMPLE_SHADER_STRING);
 	}
 	std::string getFragmentShader()
 	{
-		std::string src(FS_SIMPLE_SHADER_STRING);
-		return src;
+		return std::string(FS_SIMPLE_SHADER_STRING);
+	}
+	std::string getVertexNonShadingShader()
+	{
+		return std::string(VS_NON_SHADING_SHADER_STRING);
+	}
+	std::string getFragmentNonShadingShader()
+	{
+		return std::string(FS_NON_SHADING_SHADER_STRING);
 	}
 };

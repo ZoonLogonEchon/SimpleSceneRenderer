@@ -23,6 +23,7 @@ public:
 	void configureVertexAttrPtr(const char* attr_name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
 	void enableVertexAttrArray(const char* attr_name);
 
+	// if the name doens't exist the program doesn't fail
 	void setUniformMatrix4(const char* uniform_name, const glm::mat4 &mat);
 	void setUniformVector3(const char* uniform_name, const glm::vec3& vec);
 	void setUniformVector4(const char* uniform_name, const glm::vec4 &vec);
