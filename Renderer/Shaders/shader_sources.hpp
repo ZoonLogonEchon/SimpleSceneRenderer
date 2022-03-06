@@ -27,6 +27,9 @@
  	vec3 ambient;\n\
  	vec3 diffuse;\n\
  	vec3 specular;\n\
+ 	float k_constant;\n\
+ 	float k_linear;\n\
+ 	float k_quadratic;\n\
  };\n\
  uniform vec3 u_obj_color;\n\
  uniform vec3 u_light_dir;\n\
@@ -52,6 +55,10 @@
  	vec3 spec_color = point_light.specular * spec_factor * u_obj_color;\n\
  	return spec_color;\n\
  }\n\
+ float calc_attenuation(PointLight point_light, float distance)\n\
+ {\n\
+ 	return 1.0 / (point_light.k_constant + point_light.k_linear * distance + point_light.k_quadratic * (distance * distance));\n\
+ }\n\
  void main()\n\
  {\n\
  	vec3 normal = normalize(u_transformed_normal);\n\
@@ -59,11 +66,14 @@
  	vec3 out_color = vec3(0.0, 0.0, 0.0);\n\
  	for (int i = 0; i < u_num_point_lights; ++i)\n\
  	{\n\
- 		vec3 light_dir = normalize(u_point_lights[i].position - aFragPos);\n\
+ 		vec3 light_distance_vec = u_point_lights[i].position - aFragPos;\n\
+ 		float distance = length(light_distance_vec);\n\
+ 		float attenuation = calc_attenuation(u_point_lights[i], distance);\n\
+ 		vec3 light_dir = normalize(light_distance_vec);\n\
  		vec3 reflect_dir = reflect(-light_dir, normal);\n\
- 		out_color = out_color + get_ambient_color(u_point_lights[i]);\n\
- 		out_color = out_color + get_diffuse_color(u_point_lights[i], normal, light_dir);\n\
- 		out_color = out_color + get_spec_color(u_point_lights[i], view_dir, reflect_dir);\n\
+ 		out_color = out_color + attenuation * get_ambient_color(u_point_lights[i]);\n\
+ 		out_color = out_color + attenuation * get_diffuse_color(u_point_lights[i], normal, light_dir);\n\
+ 		out_color = out_color + attenuation * get_spec_color(u_point_lights[i], view_dir, reflect_dir);\n\
  	}\n\
  	FragColor = vec4(out_color, 1.0);\n\
  }\n"

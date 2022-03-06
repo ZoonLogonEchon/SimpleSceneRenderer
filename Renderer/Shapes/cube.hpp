@@ -26,5 +26,5 @@ public:
 
 	std::vector<Rect> rects;
 private:
-	
+	glm::vec3 position;
 };

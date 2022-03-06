@@ -40,6 +40,7 @@ void Rect::bufferData(OGLProgram& prog, const std::string attrName)
 
 void Rect::translate(const glm::vec3 vec)
 {
+	position += vec;
 	for (auto& triangle : triangles)
 	{
 		triangle.translate(vec);

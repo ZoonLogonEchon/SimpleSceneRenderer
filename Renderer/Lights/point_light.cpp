@@ -11,6 +11,9 @@ PointLight::PointLight(const std::string name)
 	shape->setColor(diffuse);
 	shape->translate(position);
 	shape->scale(glm::vec3(10.0f));
+	k_constant = 1.0f;
+	k_linear = 0.045f;
+	k_quadratic = 0.0075f;
 }
 
 void PointLight::translate(const glm::vec3 vec)

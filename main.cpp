@@ -73,13 +73,13 @@ int main(int argc, char* argv[])
 	sc.addCube(cu_name);
 	sc.addPointLight(pl_name);
 	sc.addPointLight(pl2_name);
-	sc.translatePointLight(pl2_name, glm::vec3(0.0f, 50.0f, 40.0f));
+	sc.translatePointLight(pl2_name, glm::vec3(0.0f, 10.0f, 40.0f));
 	//sc.scaleTriangle(tr_name, glm::vec3(30.0f, 30.0f, 1.0f));
 	//sc.rotateTriangle(tr_name, glm::vec3(0.0f, 0.0f, glm::radians(45.0f)));
 	//sc.translateTriangle(tr_name, glm::vec3(0.0f, -10.0f, 0.0f));
 	sc.scaleShape(cu_name, glm::vec3(30.0f, 30.0f, 30.0f));
 	sc.translateShape(cu_name, glm::vec3(0.0f, 0.0f, 20.0f));
-	//sc.rotateShape(cu_name, glm::vec3(glm::radians(45.0f), 0.0f, 0.0f));
+	sc.rotateShape(cu_name, glm::vec3(glm::radians(45.0f), 0.0f, 0.0f));
 	//sc.rotateRect(rc_name, glm::vec3(0.0f, 0.0f, glm::radians(45.0f)));
 	//sc.translateRect(rc_name, glm::vec3(0.0f, -10.0f, 0.0f));
 	Renderer ren;

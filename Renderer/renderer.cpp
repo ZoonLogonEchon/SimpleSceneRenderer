@@ -96,10 +96,18 @@ void Renderer::render(Scene& scene)
 		std::string indexed_p_light_ambient_str = indexed_p_light_str + ".ambient";
 		std::string indexed_p_light_diffuse_str = indexed_p_light_str + ".diffuse";
 		std::string indexed_p_light_specular_str = indexed_p_light_str + ".specular";
+
+		std::string indexed_p_light_kconstant_str = indexed_p_light_str + ".k_constant";
+		std::string indexed_p_light_klinear_str = indexed_p_light_str + ".k_linear";
+		std::string indexed_p_light_kquadratic_str = indexed_p_light_str + ".k_quadratic";
 		m_prog.setUniformVector3(indexed_p_light_position_str.c_str(), mapitem_point_light.second->position);
 		m_prog.setUniformVector3(indexed_p_light_ambient_str.c_str(), mapitem_point_light.second->ambient);
 		m_prog.setUniformVector3(indexed_p_light_diffuse_str.c_str(), mapitem_point_light.second->diffuse);
 		m_prog.setUniformVector3(indexed_p_light_specular_str.c_str(), mapitem_point_light.second->specular);
+
+		m_prog.setUniformFloat(indexed_p_light_kconstant_str.c_str(), mapitem_point_light.second->k_constant);
+		m_prog.setUniformFloat(indexed_p_light_klinear_str.c_str(), mapitem_point_light.second->k_linear);
+		m_prog.setUniformFloat(indexed_p_light_kquadratic_str.c_str(), mapitem_point_light.second->k_quadratic);
 		++light_index;
 	}
 		

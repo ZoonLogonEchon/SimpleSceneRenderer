@@ -56,6 +56,7 @@ void Cube::bufferData(OGLProgram& prog, const std::string attrName)
 
 void Cube::translate(const glm::vec3 vec)
 {
+	position += vec;
 	for (auto& rect : rects)
 	{
 		rect.translate(vec);
