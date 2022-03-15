@@ -1,10 +1,9 @@
 #include "camera.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
-Camera::Camera(const std::string name)
-	:eye(glm::vec3(0.0f, 0.0f, 101.0f))
-	,up(glm::vec3(0.0f, 1.0f, 0.0f))
-	,gazePoint(glm::vec3(0.0f))
+Camera::Camera()
+	:up(glm::vec3(0.0f, 1.0f, 0.0f))
+	,lookDirection(glm::vec3(0.0f, 0.0f, -1.0f))
 	,fovy(45.0f)
 	,zNear(0.01f)
 	,zFar(1000.0f)
@@ -42,12 +41,7 @@ glm::mat4 Camera::getProjectionTransform(const float width, const float height)
 	}
 }
 
-glm::mat4 Camera::getViewTransform()
-{
-	return glm::lookAt(eye, gazePoint, up);
-}
-
-void Camera::translate(const glm::vec3& move_dir)
+/*void Camera::translate(const glm::vec3& move_dir)
 {
 }
 
@@ -78,4 +72,4 @@ void Camera::lookAroundHorizontal(const float yaw)
 	glm::vec3 view_dir = glm::normalize(view_vector);
 	view_dir = glm::rotate(glm::mat4(1.0f), glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f)) * glm::vec4(view_dir, 1.0f);
 	gazePoint = eye + len * view_dir;
-}
+}*/

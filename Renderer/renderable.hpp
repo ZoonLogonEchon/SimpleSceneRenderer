@@ -21,4 +21,5 @@ public:
 private:
 	std::string name;
 	std::shared_ptr<Shape> shape;
+	
 };

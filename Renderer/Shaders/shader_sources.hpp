@@ -2,9 +2,9 @@
 #define VS_SIMPLE_SHADER_STRING "\
  #version 460 core\n\
  layout (location = 0) in vec3 aPos;\n\
+ layout (location = 1) in vec3 aNormal;\n\
  out vec3 aFragPos;\n\
  out vec3 u_transformed_normal;\n\
- uniform vec3 u_normal;\n\
  uniform mat4 projection;\n\
  uniform mat4 view_transform;\n\
  uniform mat4 model_transform;\n\
@@ -12,7 +12,7 @@
  void main()\n\
  {\n\
     mat4 pvm = projection * view_transform * model_transform;\n\
-    u_transformed_normal = mat3(transpose(u_inv_model_transform)) * u_normal;\n\
+    u_transformed_normal = mat3(transpose(u_inv_model_transform)) * aNormal;\n\
     aFragPos = vec3(model_transform * vec4(aPos, 1.0));\n\
     gl_Position = pvm * vec4(aPos, 1.0);\n\
  }\n"

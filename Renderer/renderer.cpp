@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "renderer.hpp"
-#include "Shapes/sphere.hpp"
 #include "Shaders/shaders.hpp"
 
 Renderer::Renderer() 
@@ -45,25 +44,27 @@ void Renderer::init(Scene &scene)
 	m_prog.compileAndAttachShader(fSSrc.c_str(), GL_FRAGMENT_SHADER);
 	m_prog.link();
 
-	for (auto mapitem_triangle : scene.getShapes())
-		mapitem_triangle.second->bufferData(m_prog, "aPos");
 	// no shading program
-	std::string vnss_str = Shaders::getVertexNonShadingShader();
-	std::string fnss_str = Shaders::getFragmentNonShadingShader();
+	//std::string vnss_str = Shaders::getVertexNonShadingShader();
+	//std::string fnss_str = Shaders::getFragmentNonShadingShader();
 
-	nonShadingProgam.compileAndAttachShader(vnss_str.c_str(), GL_VERTEX_SHADER);
-	nonShadingProgam.compileAndAttachShader(fnss_str.c_str(), GL_FRAGMENT_SHADER);
-	nonShadingProgam.link();
-
-	for (auto& mapitem_point_light : scene.getPointLights())
-		mapitem_point_light.second->bufferData(nonShadingProgam, "aPos");
-		
-
+	//nonShadingProgam.compileAndAttachShader(vnss_str.c_str(), GL_VERTEX_SHADER);
+	//nonShadingProgam.compileAndAttachShader(fnss_str.c_str(), GL_FRAGMENT_SHADER);
+	//nonShadingProgam.link();
+	for (auto scene_object : scene.getSceneObjects())
+	{
+		auto tr_comp = scene_object.getComponent<Transform>();
+		auto mesh_comp = scene_object.getComponent<Mesh>();
+		if (!mesh_comp)
+			continue;
+		mesh_comp->uploadData();
+		mesh_comp->configureProgramAttributes(m_prog, "aPos", "aNormal");
+	}
 	glFinish();
 }
 
 
-void Renderer::render(Scene& scene)
+void Renderer::render(Scene& scene, float vp_width, float vp_height)
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -71,56 +72,66 @@ void Renderer::render(Scene& scene)
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+	const float width = vp_width;
+	const float height = vp_height;
+	auto &mainCamera = scene.getMainCamera();
+	auto cam_comp = mainCamera.getComponent<Camera>();
+	auto trsf = mainCamera.getComponent<Transform>();
+	auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
+	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
 	
-	const float width = 800.0f;
-	const float height = 600.0f;
-	Camera &mainCamera = scene.getMainCamera();
-	glm::mat4 proj = mainCamera.getProjectionTransform(width, height);
-	glm::mat4 view_transform = mainCamera.getViewTransform();
+	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
 
 	m_prog.use();
-	// TODO maybe there's a more efficient way to do it (avoid uploading uniform if there's no change)
-	// -> uniform buffer objects
-	m_prog.setUniformMatrix4("projection", proj);
+	m_prog.setUniformMatrix4("projection", cam_comp->getProjectionTransform(width, height));
 	m_prog.setUniformMatrix4("view_transform", view_transform);
-	m_prog.setUniformVector3("u_camera_pos", scene.getMainCamera().eye);
+	m_prog.setUniformVector3("u_camera_pos", mainCamera.getComponent<Transform>()->position);
 
 	// render point lights as cubes without shading (not even)
-
-	m_prog.setUniformInt("u_num_point_lights", scene.getPointLights().size());
 	int light_index = 0;
-	for (auto& mapitem_point_light : scene.getPointLights())
+	for (auto scene_object : scene.getSceneObjects())
 	{
-		std::string indexed_p_light_str = "u_point_lights[" + std::to_string(light_index) + "]";
-		std::string indexed_p_light_position_str = indexed_p_light_str + ".position";
-		std::string indexed_p_light_ambient_str = indexed_p_light_str + ".ambient";
-		std::string indexed_p_light_diffuse_str = indexed_p_light_str + ".diffuse";
-		std::string indexed_p_light_specular_str = indexed_p_light_str + ".specular";
+		auto tr_comp = scene_object.getComponent<Transform>();
+		auto pl_comp = scene_object.getComponent<PointLight>();
+		if (pl_comp)
+		{
+			std::string indexed_p_light_str = "u_point_lights[" + std::to_string(light_index) + "]";
+			std::string indexed_p_light_position_str = indexed_p_light_str + ".position";
+			std::string indexed_p_light_ambient_str = indexed_p_light_str + ".ambient";
+			std::string indexed_p_light_diffuse_str = indexed_p_light_str + ".diffuse";
+			std::string indexed_p_light_specular_str = indexed_p_light_str + ".specular";
 
-		std::string indexed_p_light_kconstant_str = indexed_p_light_str + ".k_constant";
-		std::string indexed_p_light_klinear_str = indexed_p_light_str + ".k_linear";
-		std::string indexed_p_light_kquadratic_str = indexed_p_light_str + ".k_quadratic";
-		m_prog.setUniformVector3(indexed_p_light_position_str.c_str(), mapitem_point_light.second->position);
-		m_prog.setUniformVector3(indexed_p_light_ambient_str.c_str(), mapitem_point_light.second->ambient);
-		m_prog.setUniformVector3(indexed_p_light_diffuse_str.c_str(), mapitem_point_light.second->diffuse);
-		m_prog.setUniformVector3(indexed_p_light_specular_str.c_str(), mapitem_point_light.second->specular);
+			std::string indexed_p_light_kconstant_str = indexed_p_light_str + ".k_constant";
+			std::string indexed_p_light_klinear_str = indexed_p_light_str + ".k_linear";
+			std::string indexed_p_light_kquadratic_str = indexed_p_light_str + ".k_quadratic";
+			m_prog.setUniformVector3(indexed_p_light_position_str.c_str(), tr_comp->position);
+			m_prog.setUniformVector3(indexed_p_light_ambient_str.c_str(), pl_comp->ambient);
+			m_prog.setUniformVector3(indexed_p_light_diffuse_str.c_str(), pl_comp->diffuse);
+			m_prog.setUniformVector3(indexed_p_light_specular_str.c_str(), pl_comp->specular);
 
-		m_prog.setUniformFloat(indexed_p_light_kconstant_str.c_str(), mapitem_point_light.second->k_constant);
-		m_prog.setUniformFloat(indexed_p_light_klinear_str.c_str(), mapitem_point_light.second->k_linear);
-		m_prog.setUniformFloat(indexed_p_light_kquadratic_str.c_str(), mapitem_point_light.second->k_quadratic);
-		++light_index;
+			m_prog.setUniformFloat(indexed_p_light_kconstant_str.c_str(), pl_comp->k_constant);
+			m_prog.setUniformFloat(indexed_p_light_klinear_str.c_str(), pl_comp->k_linear);
+			m_prog.setUniformFloat(indexed_p_light_kquadratic_str.c_str(), pl_comp->k_quadratic);
+			++light_index;
+		} 
 	}
-		
-	for (auto &mapitem_triangle : scene.getShapes())
-		mapitem_triangle.second->draw(m_prog);
+	m_prog.setUniformInt("u_num_point_lights", light_index + 1);
+	
+
+	for (auto &scene_object : scene.getSceneObjects())
+	{
+		auto tr_comp = scene_object.getComponent<Transform>();
+		auto mesh_comp = scene_object.getComponent<Mesh>();
+		auto model_transform = tr_comp->getTransform();
+		m_prog.setUniformMatrix4("model_transform", model_transform);
+		m_prog.setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
+		mesh_comp->drawMesh();
+	}
 	
 	// draw lights as cubes
-	nonShadingProgam.use();
-	nonShadingProgam.setUniformMatrix4("projection", proj);
-	nonShadingProgam.setUniformMatrix4("view_transform", view_transform);
-
-	for (auto& mapitem_point_light : scene.getPointLights())
-		mapitem_point_light.second->draw(nonShadingProgam);
+	//nonShadingProgam.use();
+	//nonShadingProgam.setUniformMatrix4("projection", proj);
+	//nonShadingProgam.setUniformMatrix4("view_transform", view_transform);
 
 	glDisable(GL_BLEND);
 	glFinish();

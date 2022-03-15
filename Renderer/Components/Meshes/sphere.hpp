@@ -1,5 +1,5 @@
 #pragma once
-
+#ifdef TEST
 #include "../../glad/glad.h"
 #include <vector>
 
@@ -24,3 +24,4 @@ private:
 	
 	
 };
+#endif

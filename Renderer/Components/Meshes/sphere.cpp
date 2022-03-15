@@ -1,3 +1,4 @@
+#ifdef TEST
 #include "sphere.hpp"
 #include <iostream>
 #include <vector>
@@ -66,3 +67,4 @@ void Sphere::draw(OGLProgram& prog)
 	}
 	
 }
+#endif

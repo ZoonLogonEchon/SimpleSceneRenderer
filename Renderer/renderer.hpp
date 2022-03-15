@@ -6,13 +6,7 @@
 
 #include "scene.hpp"
 
-#include "Shapes/triangle.hpp"
-#include "Shapes/rect.hpp"
-#include "Shapes/sphere.hpp"
-
 #include "OpenGLUtils/opengl_program.hpp"
-
-typedef Sphere ParticleRenderObject;
 
 class Renderer
 {
@@ -21,10 +15,9 @@ public:
 	~Renderer();
 
 	void init(Scene &scene);
-	void render(Scene &scene);
+	void render(Scene &scene, float vp_width, float vp_height);
 
 private:
-
 	OGLProgram m_prog;
 	OGLProgram nonShadingProgam;
 	void checkGLErrors();

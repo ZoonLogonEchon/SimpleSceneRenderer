@@ -2,10 +2,8 @@
 #include "../../glad/glad.h"
 #include <string>
 #include <vector>
-
-
 #include <glm/glm.hpp>
-
+#include <unordered_map>
 class OGLProgram
 {
 public:
@@ -31,26 +29,10 @@ public:
 	//void setBool(const std::string& name, bool value);
 	void setUniformInt(const char* uniform_name, const int &value);
 	void setUniformFloat(const char* uniform_name, const float &value);
+
 private:
 	GLuint m_program_handle;
 	std::vector<GLuint> m_shader_handles;
-
 	void compileShader(const GLuint &shader);
 
-};
-
-template<typename T>
-struct gl_type
-{
-	static const GLenum value = GL_FLOAT;
-};
-template<>
-struct gl_type<float>
-{
-	static const GLenum value = GL_FLOAT;
-};
-template<>
-struct gl_type<double>
-{
-	static const GLenum value = GL_DOUBLE;
 };
