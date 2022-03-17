@@ -7,25 +7,36 @@
 #include <glm/gtx/quaternion.hpp>
 #include <memory>
 #include "../../OpenGLUtils/mesh_buffer.hpp"
+#include "mesh_source.hpp"
+#include "cube.hpp"
 class Mesh
 {
 public:
-	Mesh() {};
+	Mesh() 
+	{
+		meshSource = std::make_shared<Cube>();
+		meshBuffer = std::make_shared<MeshBuffer>();
+	};
+	Mesh(std::shared_ptr<MeshSource> mesh_src) 
+		:meshSource(mesh_src)
+	{
+		meshBuffer = std::make_shared<MeshBuffer>();
+	};
 	virtual std::vector<float> getVertexData()
 	{
-		return std::vector<float>();
+		return meshSource->getVertexData();
 	};
 	virtual std::vector<unsigned int> getFaceIndeces()
 	{
-		return std::vector<unsigned int>();
+		return meshSource->getFaceIndeces();
 	};
 	virtual std::vector<float> getNormals() 
 	{
-		return std::vector<float>();
+		return meshSource->getNormals();
 	};
 	virtual void applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
 	{
-
+		meshSource->applyObjSpaceTransformations(scale, rotation, translation);
 	};
 	void drawMesh()
 	{
@@ -34,7 +45,7 @@ public:
 	void uploadData()
 	{
 		meshBuffer->uploadVertexData(getVertexData());
-		meshBuffer->uploadVertexData(getNormals());
+		//meshBuffer->uploadVertexData(getNormals());
 		meshBuffer->uploadIndexData(getFaceIndeces());
 	}
 	void configureProgramAttributes(OGLProgram& program, const std::string vertex_attr_name, const std::string normals_attr_name)
@@ -42,5 +53,6 @@ public:
 		meshBuffer->configureProgramAttributes(program, vertex_attr_name, normals_attr_name);
 	}
 protected:
+	std::shared_ptr<MeshSource> meshSource;
 	std::shared_ptr<MeshBuffer> meshBuffer;
 };

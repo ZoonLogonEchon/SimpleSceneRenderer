@@ -8,15 +8,16 @@
 
 #include "entity_components_manager.hpp"
 #include "scene_object.hpp"
+#include "config.hpp"
 class Scene {
 public:
 	Scene(const std::string name);
 	~Scene();
 
-	SceneObject& addCube(const std::string name);
-	SceneObject& addRect(const std::string name);
-	SceneObject& addTriangle(const std::string name);
-	SceneObject& addPointLight(const std::string name);
+	std::shared_ptr<SceneObject> addCube(const std::string name);
+	std::shared_ptr<SceneObject> addRect(const std::string name);
+	std::shared_ptr<SceneObject> addTriangle(const std::string name);
+	std::shared_ptr<SceneObject> addPointLight(const std::string name);
 
 	void translateShape(const std::string name, const glm::vec3 vec);
 	void scaleShape(const std::string name, const glm::vec3 vec);
@@ -25,12 +26,12 @@ public:
 	void rotateShape(const std::string name, const glm::vec3 angles);
 	void rotateShape(const std::string name, const glm::quat q);
 
-	SceneObject& getMainCamera();
-	std::vector<SceneObject>& getSceneObjects();
+	std::shared_ptr<SceneObject> getMainCamera();
+	std::vector<std::shared_ptr<SceneObject>>& getSceneObjects();
 private:
 	EntityComponentsManager ecm;
-	std::vector<SceneObject> sceneObjects;
-
+	std::vector<std::shared_ptr<SceneObject>> sceneObjects;
+	size_t entitiesAmount;
 	// scene obj with camera component
-	SceneObject mainCamera;
+	std::shared_ptr<SceneObject> mainCamera;
 };

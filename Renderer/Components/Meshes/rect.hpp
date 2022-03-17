@@ -3,14 +3,13 @@
 #include <vector>
 #include <string>
 
-#include "mesh.hpp"
+#include "mesh_source.hpp"
 #include "triangle.hpp"
 
-class Rect : public Mesh
+class Rect : public MeshSource
 {
 public:
 	Rect();
-	Rect(std::shared_ptr<MeshBuffer> mb);
 	~Rect();
 	std::vector<float> getVertexData() override;
 	std::vector<unsigned int> getFaceIndeces() override;

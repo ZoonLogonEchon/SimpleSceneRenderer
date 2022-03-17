@@ -53,9 +53,12 @@ void Renderer::init(Scene &scene)
 	//nonShadingProgam.link();
 	for (auto scene_object : scene.getSceneObjects())
 	{
-		auto tr_comp = scene_object.getComponent<Transform>();
-		auto mesh_comp = scene_object.getComponent<Mesh>();
+		auto tr_comp = scene_object->getComponent<Transform>();
+		auto mesh_comp = scene_object->getComponent<Mesh>();
+		auto pl_comp = scene_object->getComponent<PointLight>();
 		if (!mesh_comp)
+			continue;
+		if (pl_comp)
 			continue;
 		mesh_comp->uploadData();
 		mesh_comp->configureProgramAttributes(m_prog, "aPos", "aNormal");
@@ -75,8 +78,8 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 	const float width = vp_width;
 	const float height = vp_height;
 	auto &mainCamera = scene.getMainCamera();
-	auto cam_comp = mainCamera.getComponent<Camera>();
-	auto trsf = mainCamera.getComponent<Transform>();
+	auto cam_comp = mainCamera->getComponent<Camera>();
+	auto trsf = mainCamera->getComponent<Transform>();
 	auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
 	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
 	
@@ -85,14 +88,14 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 	m_prog.use();
 	m_prog.setUniformMatrix4("projection", cam_comp->getProjectionTransform(width, height));
 	m_prog.setUniformMatrix4("view_transform", view_transform);
-	m_prog.setUniformVector3("u_camera_pos", mainCamera.getComponent<Transform>()->position);
+	m_prog.setUniformVector3("u_camera_pos", mainCamera->getComponent<Transform>()->position);
 
 	// render point lights as cubes without shading (not even)
 	int light_index = 0;
 	for (auto scene_object : scene.getSceneObjects())
 	{
-		auto tr_comp = scene_object.getComponent<Transform>();
-		auto pl_comp = scene_object.getComponent<PointLight>();
+		auto tr_comp = scene_object->getComponent<Transform>();
+		auto pl_comp = scene_object->getComponent<PointLight>();
 		if (pl_comp)
 		{
 			std::string indexed_p_light_str = "u_point_lights[" + std::to_string(light_index) + "]";
@@ -120,11 +123,17 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 
 	for (auto &scene_object : scene.getSceneObjects())
 	{
-		auto tr_comp = scene_object.getComponent<Transform>();
-		auto mesh_comp = scene_object.getComponent<Mesh>();
+		auto tr_comp = scene_object->getComponent<Transform>();
+		auto mesh_comp = scene_object->getComponent<Mesh>();
+		auto pl_comp = scene_object->getComponent<PointLight>();
+		if (!mesh_comp)
+			continue;
+		if (pl_comp)
+			continue;
 		auto model_transform = tr_comp->getTransform();
 		m_prog.setUniformMatrix4("model_transform", model_transform);
 		m_prog.setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
+		m_prog.setUniformVector3("u_obj_color", glm::vec3(1.0f, 1.0f, 0.0f));
 		mesh_comp->drawMesh();
 	}
 	

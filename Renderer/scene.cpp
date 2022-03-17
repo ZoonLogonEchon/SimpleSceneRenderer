@@ -1,9 +1,10 @@
 #include "scene.hpp"
 
 Scene::Scene(const std::string name)
+	:entitiesAmount(0)
 {
-	mainCamera = SceneObject(std::make_shared<EntityComponentsManager>(ecm), "MainCamera");
-	mainCamera.addComponent<Camera>();
+	mainCamera = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), "MainCamera");;
+	mainCamera->addComponent<Camera>();
 	sceneObjects.push_back(mainCamera);
 }
 
@@ -11,19 +12,20 @@ Scene::~Scene()
 {
 }
 
-SceneObject& Scene::addCube(const std::string name)
+std::shared_ptr<SceneObject> Scene::addCube(const std::string name)
 {
-	auto test = SceneObject(std::make_shared<EntityComponentsManager>(ecm), name);
-	test.addComponent<Mesh>();
-	*test.getComponent<Mesh>() = Cube(std::make_shared<MeshBuffer>());
+	auto test = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), name);
+	test->addComponent<Mesh>();
+	Mesh *comp = test->getComponent<Mesh>();
+	*comp = Mesh(std::make_shared<Cube>());
 	sceneObjects.push_back(test);
 	return test;
 }
 
-SceneObject& Scene::addTriangle(const std::string name)
+std::shared_ptr<SceneObject> Scene::addTriangle(const std::string name)
 {
-	auto test = SceneObject(std::make_shared<EntityComponentsManager>(ecm), name);
-	test.addComponent<Mesh>();
+	auto test = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), name);
+	test->addComponent<Mesh>();
 	return test;
 }
 
@@ -52,31 +54,32 @@ void Scene::rotateShape(const std::string name, const glm::quat q)
 	//sceneObjects.at(name)->rotate(q);
 }
 
-SceneObject& Scene::addPointLight(const std::string name)
+std::shared_ptr<SceneObject> Scene::addPointLight(const std::string name)
 {
-	//pointLights.insert({ name, std::make_shared<PointLight>(name) });
-	auto test = SceneObject(std::make_shared<EntityComponentsManager>(ecm), name);
-	test.addComponent<PointLight>();
-	test.addComponent<Mesh>();
+	auto test = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), name);
+	test->addComponent<Mesh>();
+	test->addComponent<PointLight>();
+	Mesh* comp = test->getComponent<Mesh>();
+	*comp = Mesh(std::make_shared<Cube>());
 	sceneObjects.push_back(test);
 	return test;
 }
 
 
-SceneObject& Scene::addRect(const std::string name)
+std::shared_ptr<SceneObject> Scene::addRect(const std::string name)
 {
 	//shapes.insert({ name, std::make_shared<Rect>(name) });
-	auto test = SceneObject(std::make_shared<EntityComponentsManager>(ecm), name);
-	test.addComponent<Mesh>();
+	auto test = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), name);
+	test->addComponent<Mesh>();
 	return test;
 }
 
-SceneObject& Scene::getMainCamera()
+std::shared_ptr<SceneObject> Scene::getMainCamera()
 {
 	return mainCamera;
 }
 
-std::vector<SceneObject>& Scene::getSceneObjects()
+std::vector<std::shared_ptr<SceneObject>>& Scene::getSceneObjects()
 {
 	return sceneObjects;
 }

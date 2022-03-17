@@ -37,12 +37,6 @@ Cube::Cube()
 	rects.push_back(f6);
 }
 
-Cube::Cube(std::shared_ptr<MeshBuffer> mb)
-	:Cube()
-{
-	meshBuffer = mb;
-}
-
 
 
 Cube::~Cube()

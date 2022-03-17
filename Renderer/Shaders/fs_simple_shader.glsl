@@ -48,7 +48,7 @@ void main()
 {
 	vec3 normal = normalize(u_transformed_normal);
 	vec3 view_dir = normalize(u_camera_pos - aFragPos);
-	vec3 out_color = vec3(0.0, 0.0, 0.0);
+	vec3 out_color = vec3(1.0, 0.0, 0.0);
 	for (int i = 0; i < u_num_point_lights; ++i)
 	{
 		vec3 light_distance_vec = u_point_lights[i].position - aFragPos;
@@ -56,9 +56,10 @@ void main()
 		float attenuation = calc_attenuation(u_point_lights[i], distance);
 		vec3 light_dir = normalize(light_distance_vec);
 		vec3 reflect_dir = reflect(-light_dir, normal);
-		out_color = out_color + attenuation * get_ambient_color(u_point_lights[i]);
-		out_color = out_color + attenuation * get_diffuse_color(u_point_lights[i], normal, light_dir);
-		out_color = out_color + attenuation * get_spec_color(u_point_lights[i], view_dir, reflect_dir);
+		//out_color = out_color + attenuation * get_ambient_color(u_point_lights[i]);
+		//out_color = out_color + attenuation * get_diffuse_color(u_point_lights[i], normal, light_dir);
+		//out_color = out_color + attenuation * get_spec_color(u_point_lights[i], view_dir, reflect_dir);
+		out_color = vec3(1.0);
 	}
 	FragColor = vec4(out_color, 1.0);
 }

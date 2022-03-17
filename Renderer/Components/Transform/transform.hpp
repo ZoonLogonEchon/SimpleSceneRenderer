@@ -9,6 +9,11 @@
 
 class Transform {
 public:
+	Transform()
+		:position(glm::vec3(0.0f))
+		,orientation(1.0f, 0.0f, 0.0f, 0.0f)
+		,size(1.0f)
+	{}
 	glm::mat4 getTransform()
 	{
 		glm::mat4 transform(1.0f);

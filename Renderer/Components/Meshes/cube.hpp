@@ -4,15 +4,14 @@
 #include <string>
 
 #include "rect.hpp"
-#include "mesh.hpp"
+#include "mesh_source.hpp"
 
 
 // cube built from rects (triangles would also be a possible implementation)
-class Cube : public Mesh
+class Cube : public MeshSource
 {
 public:
 	Cube();
-	Cube(std::shared_ptr<MeshBuffer> mb);
 	~Cube();
 	std::vector<float> getVertexData() override;
 	std::vector<unsigned int> getFaceIndeces() override;

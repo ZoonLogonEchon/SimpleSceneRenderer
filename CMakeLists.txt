@@ -14,6 +14,7 @@ list(APPEND HPP_FILES
         Renderer/Components/Meshes/rect.hpp
         Renderer/Components/Meshes/sphere.hpp
         Renderer/Components/Meshes/triangle.hpp
+        Renderer/Components/Meshes/mesh_source.hpp
         Renderer/Components/Camera/camera.hpp
         Renderer/Components/Transform/transform.hpp
         Renderer/OpenGLUtils/opengl_program.hpp

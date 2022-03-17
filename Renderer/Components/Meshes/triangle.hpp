@@ -6,13 +6,12 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-#include "mesh.hpp"
+#include "mesh_source.hpp"
 
-class Triangle : public Mesh
+class Triangle : public MeshSource
 {
 public:
 	Triangle();
-	Triangle(std::shared_ptr<MeshBuffer> mb);
 	~Triangle();
 	std::vector<float> getVertexData() override;
 	std::vector<unsigned int> getFaceIndeces() override;

@@ -21,12 +21,6 @@ Rect::Rect()
 	triangles.push_back(tbdc);
 }
 
-Rect::Rect(std::shared_ptr<MeshBuffer> mb)
-	:Rect()
-{
-	meshBuffer = mb;
-}
-
 void Rect::applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
 {
 	for (auto& triangle : triangles)

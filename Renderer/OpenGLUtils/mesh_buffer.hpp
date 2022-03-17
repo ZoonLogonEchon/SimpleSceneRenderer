@@ -49,13 +49,11 @@ public:
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-		program.enableVertexAttrArray(vertex_attr_name.c_str());
 		program.configureVertexAttrPtr(vertex_attr_name.c_str(), 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-		program.enableVertexAttrArray(normals_attr_name.c_str());
-		program.configureVertexAttrPtr(normals_attr_name.c_str(), 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
+		program.enableVertexAttrArray(vertex_attr_name.c_str());
+		//glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
+		//program.configureVertexAttrPtr(normals_attr_name.c_str(), 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+		//program.enableVertexAttrArray(normals_attr_name.c_str());
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

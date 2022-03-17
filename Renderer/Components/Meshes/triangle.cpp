@@ -35,12 +35,6 @@ Triangle::Triangle()
 
 }
 
-Triangle::Triangle(std::shared_ptr<MeshBuffer> mb)
-	:Triangle()
-{
-	meshBuffer = mb;
-}
-
 glm::vec3 Triangle::objSpaceTransformations(glm::vec3 point, glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
 {
 	glm::vec4 p(point, 1.0f);
