@@ -87,3 +87,18 @@ std::vector<float> Triangle::getNormals()
 	return std::vector<float>({normal[0], normal[1], normal[2]});
 }
 
+VertexInfo Triangle::getVertexInfo()
+{
+	VertexInfo vi;
+	vi.vertexSize = 3 * sizeof(float);// + 3 * sizeof(float);
+	vi.attributeOffset["position"] = 0;
+	//vi.attributeOffset["normal"] = 3 * sizeof(float);
+	return vi;
+}
+
+unsigned int Triangle::getVerticesAmount()
+{
+	
+	return 3;
+}
+

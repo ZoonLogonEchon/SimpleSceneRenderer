@@ -52,6 +52,11 @@ void OGLProgram::release()
 	glUseProgram(0);
 }
 
+GLuint OGLProgram::getAttributeLocation(const char* attr_name)
+{
+	return glGetAttribLocation(m_program_handle, attr_name);
+}
+
 void OGLProgram::configureVertexAttrPtr(const char* attr_name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* pointer)
 {
 	GLuint location_aPos = glGetAttribLocation(m_program_handle, attr_name);
@@ -93,6 +98,23 @@ void OGLProgram::setUniformFloat(const char* uniform_name, const float& value)
 {
 	GLint uni_proj_loc = glGetUniformLocation(m_program_handle, uniform_name);
 	if (uni_proj_loc != -1) glUniform1f(uni_proj_loc, value);
+}
+
+GLuint OGLProgram::getUniformBlockIndex(const char* uniform_block_name)
+{
+	return glGetUniformBlockIndex(m_program_handle, uniform_block_name);
+}
+
+void OGLProgram::setUniformBlockBindingPoint(const char* uniform_block_name, GLuint binding_point)
+{
+	auto block_index = getUniformBlockIndex(uniform_block_name);
+	glUniformBlockBinding(m_program_handle, block_index, binding_point);
+}
+
+void OGLProgram::setAttributeBindingPoint(const char* attr_name, GLuint binding_point)
+{
+	GLuint location_aPos = glGetAttribLocation(m_program_handle, attr_name);
+	glVertexAttribBinding(location_aPos, binding_point);
 }
 
 void OGLProgram::compileShader(const GLuint& shader_handle)

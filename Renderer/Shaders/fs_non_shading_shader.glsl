@@ -1,9 +1,8 @@
 #version 460 core
+in vec3 vsaPos;
 out vec4 FragColor;
-
-uniform vec3 u_obj_color;
 
 void main()
 {
-	FragColor = vec4(u_obj_color, 1.0);
+	FragColor = vec4(1.0, 1.0, 0.0, 1.0);
 }

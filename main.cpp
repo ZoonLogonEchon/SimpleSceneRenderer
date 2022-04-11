@@ -36,6 +36,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		scene->getMainCamera()->getComponent<Transform>()->rotate(1.0f * glm::vec3(0.0f));
 	if (key == GLFW_KEY_E && action == GLFW_PRESS)
 		scene->getMainCamera()->getComponent<Transform>()->rotate(-1.0f * glm::vec3(0.0f));
+	renderer->updateCameraStuff(*scene);
 }
 int main(int argc, char* argv[])
 {
@@ -43,7 +44,7 @@ int main(int argc, char* argv[])
 	// glfw window setup
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const int width = 800;
 	const int height = 600;
@@ -70,18 +71,18 @@ int main(int argc, char* argv[])
 	std::string pl2_name = "test_point_light2";
 	Scene sc("my scene");
 	auto cube = sc.addCube(cu_name);
-	auto pl1 = sc.addPointLight(pl_name);
-	auto pl2 = sc.addPointLight(pl2_name);
+	//auto pl1 = sc.addPointLight(pl_name);
+	//auto pl2 = sc.addPointLight(pl2_name);
 	cube->getComponent<Transform>()->scale(30.0f);
-	cube->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 20.0f));
-	pl1->getComponent<Transform>()->scale(10.0f);
-	pl2->getComponent<Transform>()->scale(10.0f);
-	pl1->getComponent<Transform>()->translate(glm::vec3(-20.0f, 0.0f, 20.0f));
-	pl2->getComponent<Transform>()->translate(glm::vec3(0.0f, 20.0f, 20.0f));
+	cube->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 2.0f));
+	//pl1->getComponent<Transform>()->scale(10.0f);
+	//pl2->getComponent<Transform>()->scale(10.0f);
+	//pl1->getComponent<Transform>()->translate(glm::vec3(-20.0f, 0.0f, 20.0f));
+	//pl2->getComponent<Transform>()->translate(glm::vec3(0.0f, 20.0f, 20.0f));
 	sc.getMainCamera()->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 101.0f));
 	//sc.rotateShape(cu_name, glm::vec3(glm::radians(45.0f), 0.0f, 0.0f));
 	Renderer ren;
-	ren.init(sc);
+	ren.init(sc, width, height);
 
 	renderer = &ren;
 	scene = &sc;

@@ -26,6 +26,9 @@ std::shared_ptr<SceneObject> Scene::addTriangle(const std::string name)
 {
 	auto test = std::make_shared<SceneObject>(std::make_shared<EntityComponentsManager>(ecm), name);
 	test->addComponent<Mesh>();
+	Mesh* comp = test->getComponent<Mesh>();
+	*comp = Mesh(std::make_shared<Triangle>());
+	sceneObjects.push_back(test);
 	return test;
 }
 

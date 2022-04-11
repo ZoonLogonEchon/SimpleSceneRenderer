@@ -18,6 +18,8 @@ list(APPEND HPP_FILES
         Renderer/Components/Camera/camera.hpp
         Renderer/Components/Transform/transform.hpp
         Renderer/OpenGLUtils/opengl_program.hpp
+        Renderer/phong_shader.hpp
+        Renderer/debug_shader.hpp
         Renderer/OpenGLUtils/mesh_buffer.hpp
         Renderer/Shaders/shaders.hpp
         Renderer/Shaders/shader_sources.hpp
@@ -41,6 +43,8 @@ list(APPEND CPP_FILES
         Renderer/Components/Meshes/triangle.cpp
         Renderer/Components/Camera/camera.cpp
         Renderer/OpenGLUtils/opengl_program.cpp
+        Renderer/phong_shader.cpp
+        Renderer/debug_shader.cpp
         Renderer/OpenGLUtils/mesh_buffer.cpp
         Renderer/renderer.cpp
         #Renderer/shader.cpp

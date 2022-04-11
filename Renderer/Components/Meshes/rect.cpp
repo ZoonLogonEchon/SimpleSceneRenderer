@@ -71,3 +71,13 @@ std::vector<float> Rect::getNormals()
 	}
 	return normals;
 }
+
+VertexInfo Rect::getVertexInfo()
+{
+	return triangles[0].getVertexInfo();
+}
+
+unsigned int Rect::getVerticesAmount()
+{
+	return triangles.size() * triangles[0].getVerticesAmount();
+}

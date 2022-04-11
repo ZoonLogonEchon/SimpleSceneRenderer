@@ -105,6 +105,7 @@ public:
 private:
 	std::array<std::shared_ptr<GeneralComponentArray>, 4> componentsMatrix;
 	std::unordered_map<EntityType, std::bitset<4>> entityEnabledComponents;
+	// observers
 	std::unordered_map<std::string, unsigned int> systems;
 	unsigned int amountEntities;
 };

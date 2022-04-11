@@ -16,6 +16,8 @@ public:
 	std::vector<float> getVertexData() override;
 	std::vector<unsigned int> getFaceIndeces() override;
 	std::vector<float> getNormals() override;
+	VertexInfo getVertexInfo() override;
+	unsigned int getVerticesAmount() override;
 	void applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation) override;
 private:
 	std::vector<float> vertices;

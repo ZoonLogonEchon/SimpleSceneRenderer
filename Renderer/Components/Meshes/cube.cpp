@@ -83,3 +83,13 @@ std::vector<float> Cube::getNormals()
 	}
 	return normals;
 }
+
+VertexInfo Cube::getVertexInfo()
+{
+	return rects[0].getVertexInfo();
+}
+
+unsigned int Cube::getVerticesAmount()
+{
+	return rects.size() * rects[0].getVerticesAmount();
+}

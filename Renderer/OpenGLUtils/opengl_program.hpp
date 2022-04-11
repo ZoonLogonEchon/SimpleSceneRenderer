@@ -18,6 +18,7 @@ public:
 
 	void release();
 
+	GLuint getAttributeLocation(const char* attr_name);
 	void configureVertexAttrPtr(const char* attr_name, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
 	void enableVertexAttrArray(const char* attr_name);
 
@@ -30,6 +31,10 @@ public:
 	void setUniformInt(const char* uniform_name, const int &value);
 	void setUniformFloat(const char* uniform_name, const float &value);
 
+	GLuint getUniformBlockIndex(const char* uniform_block_name);
+
+	void setUniformBlockBindingPoint(const char* uniform_block_name, GLuint binding_point);
+	void setAttributeBindingPoint(const char* attr_name, GLuint binding_point);
 private:
 	GLuint m_program_handle;
 	std::vector<GLuint> m_shader_handles;

@@ -34,6 +34,10 @@ public:
 	{
 		return meshSource->getNormals();
 	};
+	virtual VertexInfo getVertexInfo()
+	{
+		return meshSource->getVertexInfo();
+	}
 	virtual void applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation, glm::vec3 translation)
 	{
 		meshSource->applyObjSpaceTransformations(scale, rotation, translation);
@@ -44,13 +48,33 @@ public:
 	}
 	void uploadData()
 	{
-		meshBuffer->uploadVertexData(getVertexData());
-		//meshBuffer->uploadVertexData(getNormals());
+		meshBuffer->uploadVertexData(getVertexData(), getVertexInfo());
 		meshBuffer->uploadIndexData(getFaceIndeces());
 	}
-	void configureProgramAttributes(OGLProgram& program, const std::string vertex_attr_name, const std::string normals_attr_name)
+
+	GLuint getIndecesPointer()
 	{
-		meshBuffer->configureProgramAttributes(program, vertex_attr_name, normals_attr_name);
+		return meshBuffer->getIndecesPointer();
+	}
+
+	GLuint getVertexArrayObject()
+	{
+		return meshBuffer->getVertexArrayObject();
+	}
+
+	GLuint getBufferBindingIndex()
+	{
+		return meshBuffer->getBufferBindingIndex();
+	}
+
+	GLuint getVertexBuffer()
+	{
+		return meshBuffer->getVertexBuffer();
+	}
+
+	unsigned int getVerticesAmount()
+	{
+		return meshSource->getVerticesAmount();
 	}
 protected:
 	std::shared_ptr<MeshSource> meshSource;

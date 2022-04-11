@@ -1,6 +1,6 @@
 #version 460 core
 in vec3 aFragPos;
-in vec3 u_transformed_normal;
+in vec3 transformed_normal;
 out vec4 FragColor;
 #define MAX_NUM_POINT_LIGHTS 128
 struct PointLight {
@@ -18,12 +18,17 @@ uniform vec3 u_obj_color;
 uniform vec3 u_light_dir;
 uniform vec3 u_camera_pos;
 
-uniform PointLight u_point_lights[MAX_NUM_POINT_LIGHTS];
-uniform int u_num_point_lights;
+layout(std140) uniform u_lights
+{
+	int u_num_point_lights;
+	PointLight u_point_lights[MAX_NUM_POINT_LIGHTS];
+};
+
+uniform PointLight u_point_lightss[MAX_NUM_POINT_LIGHTS];
+uniform int u_num_point_lightss;
 
 vec3 get_ambient_color(PointLight point_light)
 {
-    //float ambient_factor = 0.1;
 	vec3 ambient_color = point_light.ambient * u_obj_color;
 	return ambient_color;
 }
@@ -46,20 +51,21 @@ float calc_attenuation(PointLight point_light, float distance)
 }
 void main()
 {
-	vec3 normal = normalize(u_transformed_normal);
+	vec3 normal = normalize(transformed_normal);
 	vec3 view_dir = normalize(u_camera_pos - aFragPos);
-	vec3 out_color = vec3(1.0, 0.0, 0.0);
-	for (int i = 0; i < u_num_point_lights; ++i)
+	vec3 out_color = vec3(0.0, 0.0, 0.0);
+	for (int i = 0; i < u_num_point_lightss; ++i)
 	{
-		vec3 light_distance_vec = u_point_lights[i].position - aFragPos;
+		vec3 light_distance_vec = u_point_lightss[i].position - aFragPos;
 		float distance = length(light_distance_vec);
-		float attenuation = calc_attenuation(u_point_lights[i], distance);
+		float attenuation = calc_attenuation(u_point_lightss[i], distance);
 		vec3 light_dir = normalize(light_distance_vec);
 		vec3 reflect_dir = reflect(-light_dir, normal);
-		//out_color = out_color + attenuation * get_ambient_color(u_point_lights[i]);
-		//out_color = out_color + attenuation * get_diffuse_color(u_point_lights[i], normal, light_dir);
-		//out_color = out_color + attenuation * get_spec_color(u_point_lights[i], view_dir, reflect_dir);
-		out_color = vec3(1.0);
+		out_color = out_color + attenuation * get_ambient_color(u_point_lightss[i]);
+		out_color = out_color + attenuation * get_diffuse_color(u_point_lightss[i], normal, light_dir);
+		out_color = out_color + attenuation * get_spec_color(u_point_lightss[i], view_dir, reflect_dir);
+		
 	}
+	out_color = transformed_normal + aFragPos + vec3(1.0);
 	FragColor = vec4(out_color, 1.0);
 }

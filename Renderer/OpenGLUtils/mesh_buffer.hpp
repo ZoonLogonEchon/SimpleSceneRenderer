@@ -1,16 +1,17 @@
 #pragma once
 #include "../../glad/glad.h"
 #include "opengl_program.hpp"
+#include "../typedef.hpp"
 class MeshBuffer
 {
 public:
 	MeshBuffer() 
 		:indecesSize(0)
 	{
-		glGenBuffers(1, &vbo);
-		glGenBuffers(1, &ebo);
-		glGenBuffers(1, &vboNormals);
-		glGenVertexArrays(1, &vao);
+		glCreateBuffers(1, &vbo);
+		glCreateBuffers(1, &ebo);
+		glCreateVertexArrays(1, &vao);
+		vboBindingIndex = 5;
 	}
 	void drawMesh()
 	{
@@ -19,18 +20,20 @@ public:
 		glBindVertexArray(0);
 	}
 	template<class T>
-	void uploadVertexData(std::vector<T> data)
+	void uploadVertexData(std::vector<T> data, VertexInfo vertex_info)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(decltype(data)::value_type) * data.size(), data.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// problem -> the vertex info is wrong of data doesnt fit the desc in vertex info
+		vertex_info.vertexSize; // position + normal + etc.
+		auto comp_size = sizeof(decltype(data)::value_type);
+		auto comps = data.size();
+		glNamedBufferStorage(vbo, comp_size * comps, data.data(), 0);
+		glVertexArrayVertexBuffer(vao, vboBindingIndex, vbo, 0, vertex_info.vertexSize);
 	};
 	void uploadIndexData(std::vector<unsigned int> data)
 	{
 		indecesSize = data.size();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(decltype(data)::value_type) * indecesSize, data.data(), GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glNamedBufferStorage(ebo, sizeof(decltype(data)::value_type) * indecesSize, data.data(), 0);
+		glVertexArrayElementBuffer(vao, ebo);
 	};
 	void bind()
 	{
@@ -44,24 +47,29 @@ public:
 	{
 		return indecesSize;
 	}
-	void configureProgramAttributes(OGLProgram& program, const std::string vertex_attr_name, const std::string normals_attr_name)
+
+	GLuint getVertexArrayObject()
 	{
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-		program.configureVertexAttrPtr(vertex_attr_name.c_str(), 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		program.enableVertexAttrArray(vertex_attr_name.c_str());
-		//glBindBuffer(GL_ARRAY_BUFFER, vboNormals);
-		//program.configureVertexAttrPtr(normals_attr_name.c_str(), 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		//program.enableVertexAttrArray(normals_attr_name.c_str());
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		return vao;
+	}
+	GLuint getVertexBuffer()
+	{
+		return vbo;
+	}
+	GLuint getBufferBindingIndex()
+	{
+		return vboBindingIndex;
+	}
+
+	GLuint getIndecesPointer()
+	{
+		return ebo;
 	}
 private:
 	GLuint vbo;
 	GLuint ebo;
-	GLuint vboNormals;
 	GLuint vao;
+
+	GLuint vboBindingIndex;
 	size_t indecesSize;
 };
