@@ -57,10 +57,15 @@ void DebugShader::configureAttributes(GLuint vao, GLuint buffer_index, VertexInf
 	glVertexArrayAttribBinding(vao, pos_loc, buffer_index);
 	glEnableVertexArrayAttrib(vao, pos_loc);
 
-	//auto normal_loc = prog->getAttributeLocation("aNormal");
-	//glVertexArrayAttribFormat(vao, normal_loc, 3, GL_FLOAT, GL_FALSE, vertex_info.attributeOffset["normal"]);
-	//glVertexArrayAttribBinding(vao, normal_loc, buffer_index);
-	//glEnableVertexArrayAttrib(vao, normal_loc);
+	auto normal_loc = prog->getAttributeLocation("aNormal");
+	glVertexArrayAttribFormat(vao, normal_loc, 3, GL_FLOAT, GL_FALSE, vertex_info.attributeOffset["normal"]);
+	glVertexArrayAttribBinding(vao, normal_loc, buffer_index);
+	glEnableVertexArrayAttrib(vao, normal_loc);
 	
+}
+
+void DebugShader::setUniformBlockBindingPoint(const char* unif_name, GLuint binding_point)
+{
+	prog->setUniformBlockBindingPoint(unif_name, binding_point);
 }
 

@@ -75,7 +75,17 @@ void Triangle::applyObjSpaceTransformations(glm::vec3 scale, glm::vec3 rotation,
 
 std::vector<float> Triangle::getVertexData()
 {
-	return vertices;
+	std::vector<float> ret;
+	for(int i = 0; i < getVerticesAmount(); ++i)
+	{
+		ret.push_back(vertices[i * getVerticesAmount()]);
+		ret.push_back(vertices[i * getVerticesAmount() + 1]);
+		ret.push_back(vertices[i * getVerticesAmount() + 2]);
+		ret.push_back(normal[0]);
+		ret.push_back(normal[1]);
+		ret.push_back(normal[2]);
+	}
+	return ret;
 }
 std::vector<unsigned int> Triangle::getFaceIndeces()
 {
@@ -90,9 +100,9 @@ std::vector<float> Triangle::getNormals()
 VertexInfo Triangle::getVertexInfo()
 {
 	VertexInfo vi;
-	vi.vertexSize = 3 * sizeof(float);// + 3 * sizeof(float);
+	vi.vertexSize = 3 * sizeof(decltype(vertices)::value_type) + 3 * sizeof(decltype(normal)::value_type);
 	vi.attributeOffset["position"] = 0;
-	//vi.attributeOffset["normal"] = 3 * sizeof(float);
+	vi.attributeOffset["normal"] = 3 * sizeof(decltype(vertices)::value_type);
 	return vi;
 }
 

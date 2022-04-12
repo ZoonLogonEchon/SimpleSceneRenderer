@@ -20,6 +20,7 @@ public:
 	void setUniformMatrix4(const char* unif_name, const glm::mat4& mat);
 	void setUniformVector3(const char* unif_name, const glm::vec3& vec);
 	void configureAttributes(GLuint vao, GLuint buffer_index, VertexInfo vertex_info);
+	void setUniformBlockBindingPoint(const char* unif_name, GLuint binding_point);
 private:
 	GLuint binding_point_pos_att;
 	GLuint binding_point_normal_att;

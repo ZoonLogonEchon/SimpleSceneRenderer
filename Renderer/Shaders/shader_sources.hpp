@@ -90,21 +90,31 @@
 #define VS_NON_SHADING_SHADER_STRING "\
  #version 460 core\n\
  in vec3 aPos;\n\
+ in vec3 aNormal;\n\
  out vec3 vsaPos;\n\
+ out vec3 vsaNormal;\n\
  uniform mat4 projection;\n\
  uniform mat4 view_transform;\n\
+ layout (std140) uniform u_pv\n\
+ {\n\
+ 	mat4 p;\n\
+ 	mat4 v;\n\
+ };\n\
  uniform mat4 model_transform;\n\
+ uniform mat4 u_inv_model_transform;\n\
  void main()\n\
  {\n\
-    mat4 pvm = projection * view_transform * model_transform;\n\
+    mat4 pvm = p * v * model_transform;\n\
+    vsaNormal = normalize(transpose(mat3(u_inv_model_transform)) * aNormal);\n\
     vsaPos = vec3( pvm * vec4(aPos, 1.0) );\n\
     gl_Position = pvm * vec4(aPos, 1.0);\n\
  }\n"
 #define FS_NON_SHADING_SHADER_STRING "\
  #version 460 core\n\
  in vec3 vsaPos;\n\
+ in vec3 vsaNormal;\n\
  out vec4 FragColor;\n\
  void main()\n\
  {\n\
- 	FragColor = vec4(1.0, 1.0, 0.0, 1.0);\n\
+ 	FragColor = vec4(vsaNormal, 1.0);\n\
  }\n"

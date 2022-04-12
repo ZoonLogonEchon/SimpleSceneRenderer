@@ -41,6 +41,7 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 	// phong shading program
 	//GLuint binding_point_ubo = 0;
 	//GLuint binding_point_uboLights = 1;
+	// TODO separate general (vertex data and uniform data upload) and shaders specific stuff
 	for (auto scene_object : scene.getSceneObjects())
 	{
 		auto mesh_comp = scene_object->getComponent<Mesh>();
@@ -49,13 +50,13 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 		mesh_comp->uploadData();
 		auto vertices_amount = mesh_comp->getVerticesAmount();
 		auto vertex_size = mesh_comp->getVertexInfo().vertexSize;
-		void *gpudata =  malloc(vertex_size * vertices_amount);
-		glGetNamedBufferSubData(mesh_comp->getVertexBuffer(), 0, vertex_size * vertices_amount, gpudata);
-		float* buffer_content = reinterpret_cast<float *>(gpudata);
+		//void *gpudata =  malloc(vertex_size * vertices_amount);
+		//glGetNamedBufferSubData(mesh_comp->getVertexBuffer(), 0, vertex_size * vertices_amount, gpudata);
+		//float* buffer_content = reinterpret_cast<float *>(gpudata);
 		debugShader->configureAttributes(mesh_comp->getVertexArrayObject(), mesh_comp->getBufferBindingIndex(), mesh_comp->getVertexInfo());
-		free(gpudata);
+		//free(gpudata);
 	}
-	/*
+	
 	auto mainCamera = scene.getMainCamera();
 	auto cam_comp = mainCamera->getComponent<Camera>();
 	auto trsf = mainCamera->getComponent<Transform>();
@@ -66,19 +67,17 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 
 	
 	
-	
-	unifBufferBindingPointMap[binding_point_ubo] = ubo;
-	glBindBuffer(GL_UNIFORM_BUFFER, unifBufferBindingPointMap[binding_point_ubo]);
-	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	glBindBufferRange(GL_UNIFORM_BUFFER, binding_point_ubo, unifBufferBindingPointMap[binding_point_ubo], 0, 2 * sizeof(glm::mat4));
-	glBindBuffer(GL_UNIFORM_BUFFER, unifBufferBindingPointMap[binding_point_ubo]);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view_transform));
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	
+	glCreateBuffers(1, &uboVP);
+	// the data transfer
+	glNamedBufferStorage(uboVP, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_STORAGE_BIT);
+	glNamedBufferSubData(uboVP, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+	glNamedBufferSubData(uboVP, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view_transform));
+	unifBufferBindingPointMap[uboVP] = 0;
+	// associate a buffer with a binding point
+	glBindBufferRange(GL_UNIFORM_BUFFER, unifBufferBindingPointMap[uboVP], uboVP, 0, 2 * sizeof(glm::mat4));
+	// give the prog the binding point
+	debugShader->setUniformBlockBindingPoint("u_pv", unifBufferBindingPointMap[uboVP]);
+	/*
 	GLuint uboLights;
 	glGenBuffers(1, &uboLights);
 	unifBufferBindingPointMap[binding_point_uboLights] = uboLights;
@@ -146,8 +145,8 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
 
 	debugShader->use();
-	debugShader->setUniformMatrix4("projection", projection);
-	debugShader->setUniformMatrix4("view_transform", view_transform);
+	//debugShader->setUniformMatrix4("projection", projection);
+	//debugShader->setUniformMatrix4("view_transform", view_transform);
 	for (auto &scene_object : scene.getSceneObjects())
 	{
 		// this loop call code will go into the draw call itself
@@ -157,7 +156,7 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 			continue;
 		auto model_transform = tr_comp->getTransform();
 		debugShader->setUniformMatrix4("model_transform", model_transform);
-		//debugShader->setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
+		debugShader->setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
 		//debugShader->setUniformVector3("u_obj_color", glm::vec3(1.0f, 1.0f, 0.0f));
 		debugShader->draw(mesh_comp);
 	}
@@ -180,9 +179,7 @@ void Renderer::updateCameraStuff(Scene& scene)
 	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
 	//auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
 	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
-	glBindBuffer(GL_UNIFORM_BUFFER, unifBufferBindingPointMap[0]);
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view_transform));
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	glNamedBufferSubData(uboVP, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view_transform));
 }
 
 void Renderer::checkGLErrors()

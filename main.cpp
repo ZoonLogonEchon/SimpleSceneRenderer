@@ -21,9 +21,9 @@ Scene* scene;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 0.0f, 1.0f));
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
 		scene->getMainCamera()->getComponent<Transform>()->translate(-1.0f * glm::vec3(0.0, 0.0f, 1.0f));
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 0.0f, 1.0f));
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
 		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(1.0, 0.0f, 0.0f));
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
