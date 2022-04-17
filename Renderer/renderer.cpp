@@ -34,13 +34,7 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
-	//GLuint ubo;
-	//glGenBuffers(1, &ubo);
-	//phongShader = std::make_shared<PhongShader>();
 	debugShader = std::make_shared<DebugShader>();
-	// phong shading program
-	//GLuint binding_point_ubo = 0;
-	//GLuint binding_point_uboLights = 1;
 	// TODO separate general (vertex data and uniform data upload) and shaders specific stuff
 	for (auto scene_object : scene.getSceneObjects())
 	{
@@ -60,13 +54,13 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 	auto mainCamera = scene.getMainCamera();
 	auto cam_comp = mainCamera->getComponent<Camera>();
 	auto trsf = mainCamera->getComponent<Transform>();
-	auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
-	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
-	auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
-	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
 
-	
-	
+	auto rot_mat = glm::toMat3(trsf->orientation);
+	auto look_dir = glm::normalize(rot_mat * cam_comp->lookDirection);
+	auto up_dir = glm::normalize(rot_mat * cam_comp->up);
+	auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
+	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + look_dir, up_dir);
+
 	glCreateBuffers(1, &uboVP);
 	// the data transfer
 	glNamedBufferStorage(uboVP, 2 * sizeof(glm::mat4), NULL, GL_DYNAMIC_STORAGE_BIT);
@@ -125,6 +119,13 @@ void Renderer::initEntity(EntityType entity)
 	*/
 }
 
+void Renderer::initSceneObject(std::shared_ptr<SceneObject> sc_obj)
+{
+	auto mesh_comp = sc_obj->getComponent<Mesh>();
+	mesh_comp->uploadData();
+	debugShader->configureAttributes(mesh_comp->getVertexArrayObject(), mesh_comp->getBufferBindingIndex(), mesh_comp->getVertexInfo());
+}
+
 
 void Renderer::render(Scene& scene, float vp_width, float vp_height)
 {
@@ -133,20 +134,9 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	const float width = vp_width;
-	const float height = vp_height;
 	auto mainCamera = scene.getMainCamera();
-	auto cam_comp = mainCamera->getComponent<Camera>();
-	auto trsf = mainCamera->getComponent<Transform>();
-	auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
-	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
-	auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
-	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
-
+	auto main_cam_comp = mainCamera->getComponent<Camera>();
 	debugShader->use();
-	//debugShader->setUniformMatrix4("projection", projection);
-	//debugShader->setUniformMatrix4("view_transform", view_transform);
 	for (auto &scene_object : scene.getSceneObjects())
 	{
 		// this loop call code will go into the draw call itself
@@ -154,17 +144,15 @@ void Renderer::render(Scene& scene, float vp_width, float vp_height)
 		auto mesh_comp = scene_object->getComponent<Mesh>();
 		if (!mesh_comp)
 			continue;
+		auto cam_comp = scene_object->getComponent<Camera>();
+		if (cam_comp && cam_comp == main_cam_comp)
+			continue;
 		auto model_transform = tr_comp->getTransform();
 		debugShader->setUniformMatrix4("model_transform", model_transform);
 		debugShader->setUniformMatrix4("u_inv_model_transform", glm::inverse(model_transform));
 		//debugShader->setUniformVector3("u_obj_color", glm::vec3(1.0f, 1.0f, 0.0f));
 		debugShader->draw(mesh_comp);
 	}
-	
-	// draw lights as cubes
-	//nonShadingProgam.use();
-	//nonShadingProgam.setUniformMatrix4("projection", proj);
-	//nonShadingProgam.setUniformMatrix4("view_transform", view_transform);
 
 	glDisable(GL_BLEND);
 	glFinish();
@@ -175,10 +163,10 @@ void Renderer::updateCameraStuff(Scene& scene)
 	auto camera = scene.getMainCamera();
 	auto cam_comp = camera->getComponent<Camera>();
 	auto trsf = camera->getComponent<Transform>();
-	auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
-	auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
-	//auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
-	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + glm::vec3(look_dir), glm::vec3(up_dir));
+	auto rot_mat = glm::toMat3(trsf->orientation);
+	auto look_dir = glm::normalize(rot_mat * cam_comp->lookDirection);
+	auto up_dir = glm::normalize(rot_mat * cam_comp->up);
+	glm::mat4 view_transform = glm::lookAt(trsf->position, trsf->position + look_dir, up_dir);
 	glNamedBufferSubData(uboVP, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view_transform));
 }
 

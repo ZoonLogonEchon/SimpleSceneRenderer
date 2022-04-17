@@ -20,22 +20,38 @@ Renderer* renderer;
 Scene* scene;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	auto camera = scene->getMainCamera();
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(-1.0f * glm::vec3(0.0, 0.0f, 1.0f));
+		camera->getComponent<Transform>()->translate(-1.0f * glm::vec3(0.0, 0.0f, 1.0f));
 	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 0.0f, 1.0f));
+		camera->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 0.0f, 1.0f));
 	if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(1.0, 0.0f, 0.0f));
+		camera->getComponent<Transform>()->translate(1.0f * glm::vec3(1.0, 0.0f, 0.0f));
 	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(-1.0f * glm::vec3(1.0, 0.0f, 0.0f));
+		camera->getComponent<Transform>()->translate(-1.0f * glm::vec3(1.0, 0.0f, 0.0f));
 	if (key == GLFW_KEY_W && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 1.0f, 0.0f));
+		camera->getComponent<Transform>()->translate(1.0f * glm::vec3(0.0, 1.0f, 0.0f));
 	if (key == GLFW_KEY_S && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->translate(-1.0f * glm::vec3(0.0, 1.0f, 0.0f));
+		camera->getComponent<Transform>()->translate(-1.0f * glm::vec3(0.0, 1.0f, 0.0f));
 	if (key == GLFW_KEY_Q && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->rotate(1.0f * glm::vec3(0.0f));
+		camera->getComponent<Transform>()->rotate(0.1f * glm::vec3(0.0f, 1.0f, 0.0f));
 	if (key == GLFW_KEY_E && action == GLFW_PRESS)
-		scene->getMainCamera()->getComponent<Transform>()->rotate(-1.0f * glm::vec3(0.0f));
+		camera->getComponent<Transform>()->rotate(-0.1f * glm::vec3(0.0f, 1.0f, 0.0f));
+	// create new cube
+	if (key == GLFW_KEY_N && action == GLFW_PRESS)
+	{
+		auto cube = scene->addCube("new dynamic cube");
+		auto cam_comp = camera->getComponent<Camera>();
+		auto trsf = camera->getComponent<Transform>();
+		auto look_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->lookDirection, 1.0f));
+		//auto up_dir = glm::normalize(glm::toMat4(trsf->orientation) * glm::vec4(cam_comp->up, 1.0f));
+		
+		cube->getComponent<Transform>()->translate(50.0f * glm::vec3(look_dir) + trsf->position);
+		cube->getComponent<Transform>()->scale(10.0f);
+
+		renderer->initSceneObject(cube);
+	}
+	
 	renderer->updateCameraStuff(*scene);
 }
 int main(int argc, char* argv[])
@@ -80,6 +96,9 @@ int main(int argc, char* argv[])
 	//pl1->getComponent<Transform>()->translate(glm::vec3(-20.0f, 0.0f, 20.0f));
 	//pl2->getComponent<Transform>()->translate(glm::vec3(0.0f, 20.0f, 20.0f));
 	sc.getMainCamera()->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 101.0f));
+	// TODO if camera has a mesh it should not be rendered
+	sc.getMainCamera()->addComponent<Mesh>();
+	*(sc.getMainCamera()->getComponent<Mesh>()) = Mesh(std::make_shared<Cube>());
 	//sc.rotateShape(cu_name, glm::vec3(glm::radians(45.0f), 0.0f, 0.0f));
 	Renderer ren;
 	ren.init(sc, width, height);

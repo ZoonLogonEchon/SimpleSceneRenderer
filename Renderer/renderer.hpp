@@ -17,6 +17,7 @@ public:
 
 	void init(Scene &scene, float vp_width, float vp_height);
 	void initEntity(EntityType entity);
+	void initSceneObject(std::shared_ptr<SceneObject> sc_obj);
 	void render(Scene &scene, float vp_width, float vp_height);
 	void updateCameraStuff(Scene& scene);
 private:
