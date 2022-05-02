@@ -8,9 +8,9 @@ public:
 	MeshBuffer() 
 		:indecesSize(0)
 	{
-		glCreateBuffers(1, &vbo);
-		glCreateBuffers(1, &ebo);
-		glCreateVertexArrays(1, &vao);
+		
+		
+		
 		vboBindingIndex = 5;
 	}
 	void drawMesh()
@@ -19,10 +19,17 @@ public:
 		glDrawElements(GL_TRIANGLES, getIndecesSize(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+	void init()
+	{
+		glCreateBuffers(1, &vbo);
+		glCreateBuffers(1, &ebo);
+		glCreateVertexArrays(1, &vao);
+	}
 	template<class T>
 	void uploadVertexData(std::vector<T> data, VertexInfo vertex_info)
 	{
 		// problem -> the vertex info is wrong of data doesnt fit the desc in vertex info
+		
 		vertex_info.vertexSize; // position + normal + etc.
 		auto comp_size = sizeof(decltype(data)::value_type);
 		auto comps = data.size();

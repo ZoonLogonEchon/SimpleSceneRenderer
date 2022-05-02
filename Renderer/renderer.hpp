@@ -15,10 +15,11 @@ public:
 	Renderer();
 	~Renderer();
 
-	void init(Scene &scene, float vp_width, float vp_height);
+	void init(std::shared_ptr<Scene> scene, float vp_width, float vp_height);
+	void resize(std::shared_ptr<Scene> scene, float vp_width, float vp_height);
 	void initEntity(EntityType entity);
 	void initSceneObject(std::shared_ptr<SceneObject> sc_obj);
-	void render(Scene &scene, float vp_width, float vp_height);
+	void render(std::shared_ptr<Scene> scene);
 	void updateCameraStuff(Scene& scene);
 private:
 	//OGLProgram m_prog;

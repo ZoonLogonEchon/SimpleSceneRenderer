@@ -42,6 +42,11 @@ public:
 	{
 		meshSource->applyObjSpaceTransformations(scale, rotation, translation);
 	};
+	void init()
+	{
+		//meshSource->init();
+		meshBuffer->init();
+	}
 	void drawMesh()
 	{
 		meshBuffer->drawMesh();

@@ -30,17 +30,18 @@ MessageCallback(GLenum source,
 }
 
 
-void Renderer::init(Scene& scene, float vp_width, float vp_height)
+void Renderer::init(std::shared_ptr<Scene> scene, float vp_width, float vp_height)
 {
 	glEnable(GL_DEBUG_OUTPUT);
 	glDebugMessageCallback(MessageCallback, 0);
 	debugShader = std::make_shared<DebugShader>();
 	// TODO separate general (vertex data and uniform data upload) and shaders specific stuff
-	for (auto scene_object : scene.getSceneObjects())
+	for (auto scene_object : scene->getSceneObjects())
 	{
 		auto mesh_comp = scene_object->getComponent<Mesh>();
 		if (!mesh_comp)
 			continue;
+		mesh_comp->init();
 		mesh_comp->uploadData();
 		auto vertices_amount = mesh_comp->getVerticesAmount();
 		auto vertex_size = mesh_comp->getVertexInfo().vertexSize;
@@ -51,7 +52,7 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 		//free(gpudata);
 	}
 	
-	auto mainCamera = scene.getMainCamera();
+	auto mainCamera = scene->getMainCamera();
 	auto cam_comp = mainCamera->getComponent<Camera>();
 	auto trsf = mainCamera->getComponent<Transform>();
 
@@ -107,6 +108,14 @@ void Renderer::init(Scene& scene, float vp_width, float vp_height)
 	glFinish();
 }
 
+void Renderer::resize(std::shared_ptr<Scene> scene, float vp_width, float vp_height)
+{
+	auto camera = scene->getMainCamera();
+	auto cam_comp = camera->getComponent<Camera>();
+	auto projection = cam_comp->getProjectionTransform(vp_width, vp_height);
+	glNamedBufferSubData(uboVP, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+}
+
 void Renderer::initEntity(EntityType entity)
 {
 	/*
@@ -127,17 +136,17 @@ void Renderer::initSceneObject(std::shared_ptr<SceneObject> sc_obj)
 }
 
 
-void Renderer::render(Scene& scene, float vp_width, float vp_height)
+void Renderer::render(std::shared_ptr<Scene> scene)
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0.0f, 0.0f, 0.5f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	auto mainCamera = scene.getMainCamera();
+	auto mainCamera = scene->getMainCamera();
 	auto main_cam_comp = mainCamera->getComponent<Camera>();
 	debugShader->use();
-	for (auto &scene_object : scene.getSceneObjects())
+	for (auto &scene_object : scene->getSceneObjects())
 	{
 		// this loop call code will go into the draw call itself
 		auto tr_comp = scene_object->getComponent<Transform>();

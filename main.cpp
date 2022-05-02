@@ -8,7 +8,9 @@
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-
+#include <QApplication>
+#include "GUI/rendererwidget.hpp"
+#include "GUI/mainwindow.hpp"
 #include "Renderer/renderer.hpp"
 #include "Renderer/scene.hpp"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -54,13 +56,41 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	
 	renderer->updateCameraStuff(*scene);
 }
+
+void fill_default_scene(std::shared_ptr<Scene> scene)
+{
+	std::string rc_name = "test_rect";
+	std::string cu_name = "test_cube";
+	std::string pl_name = "test_point_light";
+	std::string pl2_name = "test_point_light2";
+	auto cube = scene->addCube(cu_name);
+	cube->getComponent<Transform>()->scale(30.0f);
+	cube->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 2.0f));
+	scene->getMainCamera()->getComponent<Transform>()->translate(glm::vec3(0.0f, 0.0f, 101.0f));
+}
+
 int main(int argc, char* argv[])
 {
+	const int opengl_version_major = 4;
+	const int opengl_version_minor = 5;
 
+	QApplication app(argc, argv);
+	QSurfaceFormat format;
+	format.setDepthBufferSize(24);
+	format.setStencilBufferSize(8);
+	format.setVersion(opengl_version_major, opengl_version_minor);
+	format.setProfile(QSurfaceFormat::CoreProfile);
+	QSurfaceFormat::setDefaultFormat(format);
+	//std::shared_ptr<Scene> sc = std::make_shared<Scene>("my scene");
+	//fill_default_scene(sc);
+	MainWindow main_window;
+	main_window.show();
+	return app.exec();
+	/*
 	// glfw window setup
 	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, opengl_version_major);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, opengl_version_minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	const int width = 800;
 	const int height = 600;
@@ -128,5 +158,6 @@ int main(int argc, char* argv[])
 	}
 	glfwTerminate();
 	return 0;
+	*/
 }
 
